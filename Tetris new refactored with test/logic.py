@@ -29,7 +29,7 @@ class BlockTooLeftError(BlockMovingError):
     '''
     
 class BlockBlockedError(BlockMovingError):
-        '''
+    '''
     when trying to move to or creating
     a Block interfering with an already
     existing Block
