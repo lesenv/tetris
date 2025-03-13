@@ -34,7 +34,9 @@ class BlockBlockedError(BlockMovingError):
     a Block interfering with an already
     existing Block
     '''
-
+'''
+setting global constants for easily using in methods
+'''
 MOVE_DOWN = "fall"
 MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
@@ -111,7 +113,11 @@ class Playscreen():
         
     def get_height(self):
         return len(self.playscreen)
-        
+
+    def new_Block(self):
+        #self.active_Block to background, then None
+        self.add_Block()
+
     def add_Block(
             self,
             block = None,
@@ -144,6 +150,9 @@ class Playscreen():
 #          print_matrix(block.block)
 #          inserting active_block into playscreen
           self.insert_active_block()
+        else:
+            pass
+            #Exception and lose game
           
     def insert_active_block(self):
           block = self.active_block
@@ -184,7 +193,6 @@ class Playscreen():
             
     def fall_down(self):
             if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
-                self.add_Block()
                 raise BlockTooLowError
             #neue pos
             self.active_block_pos[0] += 1
@@ -220,9 +228,11 @@ class Playscreen():
                     elif direction == MOVE_RIGHT:
                         self.go_right()
             except BlockTooRightError:
-                        self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
+                self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
             except BlockTooLeftError:
-                        self.active_block_pos[1] = 0
+                self.active_block_pos[1] = 0
+            except BlockTooLowError:
+                self.new_Block()
             # input new block
             self.insert_active_block()
             after = self.counting(self.playscreen)
