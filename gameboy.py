@@ -5,8 +5,8 @@ import pygame
 
 class Gameboy():
     def __init__(self,
-                         scr,
-                         DIM = 20):
+                 scr,
+                 DIM = 20):
         # getting screen and dimension of givens
         self.scr = scr
         self.DIM = DIM
@@ -134,6 +134,10 @@ screen = pygame.display.set_mode(size=(SCREEN_WIDTH, SCREEN_HEIGHT))
 timer = pygame.time.Clock()
 # instancing of gameboy and game (still just one game)
 gb = Gameboy(screen)
+### !!!
+### to change games, just uncomment appropriate line and comment active game
+### -- just for the beginning, later there will be a choice made during game
+### !!!
 ## snake
 #g = snake.Game(
 ## tetris
@@ -158,10 +162,10 @@ while True:
                 posRect = (
                     event.x*SCREEN_WIDTH,
                     event.y*SCREEN_HEIGHT, 1, 1)
-                # if clicked on either gameboy-button,
-                # post a KEYDOWN-event for the
-                # next loop of the game_whileTrue
                 if gb.detect_buttons(posRect):
+                    # if clicked on either gameboy-button,
+                    # post a KEYDOWN-event for the
+                    # next loop of the game.whileTrue()
                     new_move = pygame.event.Event(
                            pygame.KEYDOWN,
                            {
