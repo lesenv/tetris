@@ -44,9 +44,9 @@ class Test_Moving_Tiles(unittest.TestCase):
                                                                                           
     def test_turning_block(self):
         self.z_block.turn()
-        self.assertEqual(self.z_block.block, [[0,1], [1,1], [1,0]], "turning S not working")
+        self.assertEqual(self.z_block.block, [[0,1], [1,1], [1,0]], "turning Z not working")
         self.z_block.turn()
-        self.assertEqual(self.z_block.block, [[1,1,0], [0,1,1]], "2nd turning S not working")
+        self.assertEqual(self.z_block.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
         self.tower_block.turn()
         self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
         self.tower_block.turn()
