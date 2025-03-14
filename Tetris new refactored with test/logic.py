@@ -81,6 +81,17 @@ class Block():
                 # horizontal stick
                 return 1
             return len(self.block)
+
+        def turn(self):
+            if type(self.block[0]) == type(1):
+                # horizontal stick
+                self.block = [[e] for e in self.block]
+            elif len(self.block[0]) == 1:
+                self.block = [r for [r] in  self.block]
+            else:
+                rotated = list(zip(*self.block[::-1]))
+                self.block = list(list(x) for x in rotated)
+            return 
             
 #        def __repr__(self):
 #            string = "\n".join(self.block)
@@ -194,7 +205,7 @@ class Playscreen():
     def fall_down(self):
             if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
                 raise BlockTooLowError
-            #neue pos
+            #else: go down
             self.active_block_pos[0] += 1
                                         
     def go_left(self):
@@ -203,7 +214,7 @@ class Playscreen():
             '''
             if self.active_block_pos[1] == 0:
                 raise BlockTooLeftError
-            #neue pos
+            #else: go left
             self.active_block_pos[1] -= 1
             
     def go_right(self):
@@ -212,7 +223,7 @@ class Playscreen():
             '''
             if self.active_block_pos[1] + self.active_block.get_width() >= self.get_width():
                 raise BlockTooRightError
-            #neue pos
+            #else: go right
             self.active_block_pos[1] += 1
             
     def move(self, direction):
@@ -238,6 +249,7 @@ class Playscreen():
             after = self.counting(self.playscreen)
 # DEBUGGING
 #            print(f"{direction}: before: {before}, after: {after}")
+#        if before != after: block blocked, reverse movement
             
     def print_me(self):
             print_matrix(self.playscreen)

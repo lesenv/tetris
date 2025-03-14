@@ -41,19 +41,14 @@ class Test_Moving_Tiles(unittest.TestCase):
         # playscreens
         self.playscreen4x4s = logic.Playscreen(4,4, block = self.s_block)
         self.playscreen10x10z = logic.Playscreen(10, 10, block = self.z_block)
-
-# to test:
-              ### Playscreen
-              ## -- Exception fall
-              ## goright
-              ## -- Exception
-              ## goleft
-              ## -- Exception
-              ## turn
                                                                                           
-#    def test_turning_block(self):
-#        self.assertEqual(self.z_block.turn(), [[0,1], [1,1][1,0]], "turning not working")
-#        self.assertEqual(self.tower_block.turn(), [[1],[1], [1],[1]], "turning not working")
+    def test_turning_block(self):
+        self.z_block.turn()
+        self.assertEqual(self.z_block.block, [[0,1], [1,1], [1,0]], "turning S not working")
+        self.tower_block.turn()
+        self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
+        self.tower_block.turn()
+        self.assertEqual(self.tower_block.block, [1,1, 1,1], "turning back tower not working")
 
     def test_zero_matrix(self):
         self.assertEqual(logic.zero_matrix(2,2), [[0,0],[0,0]], "2-2 0-matrix didn't work")
@@ -84,9 +79,13 @@ class Test_Moving_Tiles(unittest.TestCase):
 ##        logic.print_matrix(fp)
         self.assertEqual(self.playscreen4x4s.playscreen, fp , "fell not okay")
         
-    def test_fall_exception(self):
+    def test_fall_stopping_at_the_bottom(self):
+# DEBUGGING
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        self.assertRaises(logic.BlockTooLowError, lambda: self.playscreen4x4s.move(logic.MOVE_DOWN))
+        self.playscreen4x4s.move(logic.MOVE_DOWN)
+        bottom_screen = self.playscreen4x4s.playscreen
+        self.playscreen4x4s.move(logic.MOVE_DOWN)
+        self.assertEqual(self.playscreen4x4s.playscreen, bottom_screen, "Block moved, obwohl Block is at the bottom")
         
         
 if __name__ == "__main__":
