@@ -41,9 +41,9 @@ MOVE_DOWN = "fall"
 MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
 
-z_block = [[1,1,0],[0,1,1]]
-s_block = [[0,1,1],[1,1,0]]
-blocks = [z_block, s_block]
+Z_BLOCK = [[1,1,0],[0,1,1]]
+S_BLOCK = [[0,1,1],[1,1,0]]
+BLOCKS = [Z_BLOCK, S_BLOCK]
 
 def print_matrix(m):
     '''printing nicely a matrix'''
@@ -67,7 +67,7 @@ class Block():
             block = None
             ):
             if not block:
-                block = choice(blocks)
+                block = choice(BLOCKS)
             self.block = block
                 
         def get_width(self):
@@ -110,14 +110,12 @@ class Playscreen():
             block = None):
         self.playscreen = zero_matrix(width, height)
         self.blocks = []
+        self.active_block_pos = [0,0]
         if not block:
             block = Block()
         self.preview_block = block
         self.active_block = None
-        self.active_block_pos = [0,0]
-        if not block:
-            block = Block()
-        self.add_Block(block = block)
+#        self.add_Block(block = block)
         
     def get_width(self):
         return len(self.playscreen[0])
@@ -139,13 +137,15 @@ class Playscreen():
         # else get the preview block
         self.active_block = self.preview_block
         # preview getting from above
-        # if not existing, creating a new one
+        # if not given, creating a new one
         try:
             self.preview_block = block
         except AttributeError:
             self.preview_block = Block()
         if not pos:
-                pos =  [0, int((len(self.playscreen[0])-block.get_width()+1)/2)]
+            # if pos is not given,
+            # take the top-middle
+            pos =  [0, int((len(self.playscreen[0])-block.get_width()+1)/2)]
         self.active_block_pos = pos
         x, y = self.active_block_pos
         free = True
@@ -164,15 +164,21 @@ class Playscreen():
         else:
             pass
             #Exception and lose game
-          
-    def insert_active_block(self):
-          block = self.active_block
-          x, y = self.active_block_pos
-          for i in range(block.get_width()):
-            for j in range(block.get_height()):
+
+    def get_block_pos(self, block, abs = True):
+        x, y = self.active_block_pos
+        for i in range(block.get_width()):
+            for j in range(block.get_width()):
                 _x = x + i
                 _y = y + j
-                self.playscreen[_x][_y] = block.block[j][i]
+                yield [_x, _y]
+
+          
+    def insert_active_block(self):
+        block = self.active_block
+        _x, _y = self.active_block_pos
+        for x, y in self.get_block_pos(block):
+                self.playscreen[x][y] = block.block[_y-y][_x-x]
                 
     def erase_active_block(self):
           block = self.active_block
@@ -225,6 +231,12 @@ class Playscreen():
                 raise BlockTooRightError
             #else: go right
             self.active_block_pos[1] += 1
+
+    def turn(self):
+        dummy = self.active_block
+        dummy.turn()
+        for row in dummy.block:
+            print(row)
             
     def move(self, direction):
             before = self.counting(self.playscreen)
@@ -261,7 +273,9 @@ if __name__ == "__main__":
     tetris.print_me()
     print("creating a block")
     block1 = Block()
-    print("adding a block")
+    tetris.preview_block = block1
+    print("adding a block:")
+    print_matrix(block1.block)
     tetris.add_Block(block1)
     print("printing")
     tetris.print_me()
@@ -275,5 +289,8 @@ if __name__ == "__main__":
     print("go left twice")
     tetris.go_left()
     tetris.go_left()
+    tetris.print_me()
+    print("turn")
+    tetris.turn()
     tetris.print_me()
     

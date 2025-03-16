@@ -99,12 +99,12 @@ class Game():
         
     def setup_background(self):
         '''                              < right >
-        _____________ _________________
-        |                     | |                           |
+        _______________________ __________________
+        |                     | |                |
         |                     | |   scorescreen  |
-        | playscreen | K===========3
-        |                     | | previewscreen |
-        L___________JL_______________J
+        |     playscreen      | K================3
+        |                     | |  previewscreen |
+        L_____________________J L________________J
         '''
         #background
         self.scr.fill((220,220,120))

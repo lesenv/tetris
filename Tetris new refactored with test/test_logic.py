@@ -27,11 +27,11 @@ class Test_Blocks(unittest.TestCase):
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
         # TetrisBlocks
-        self.z_block = logic.Block(
+        self.Z_BLOCK = logic.Block(
                                  [[1,1,0],
                                   [0,1,1]]
                                   )
-        self.s_block = logic.Block(
+        self.S_BLOCK = logic.Block(
                                  [[0,1,1],
                                   [1,1,0]]
                                   )
@@ -39,14 +39,14 @@ class Test_Moving_Tiles(unittest.TestCase):
                                  [1,1,1,1]
                                  )
         # playscreens
-        self.playscreen4x4s = logic.Playscreen(4,4, block = self.s_block)
-        self.playscreen10x10z = logic.Playscreen(10, 10, block = self.z_block)
+        self.playscreen4x4s = logic.Playscreen(4,4, block = self.S_BLOCK)
+        self.playscreen10x10z = logic.Playscreen(10, 10, block = self.Z_BLOCK)
                                                                                           
     def test_turning_block(self):
-        self.z_block.turn()
-        self.assertEqual(self.z_block.block, [[0,1], [1,1], [1,0]], "turning Z not working")
-        self.z_block.turn()
-        self.assertEqual(self.z_block.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
+        self.Z_BLOCK.turn()
+        self.assertEqual(self.Z_BLOCK.block, [[0,1], [1,1], [1,0]], "turning Z not working")
+        self.Z_BLOCK.turn()
+        self.assertEqual(self.Z_BLOCK.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
         self.tower_block.turn()
         self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
         self.tower_block.turn()
