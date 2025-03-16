@@ -84,15 +84,15 @@ class Block():
             return len(self.block)
 
         def turn(self):
-            if type(self.block[0]) == type(1):
-                # horizontal stick
-                self.block = [[e] for e in self.block]
+            #if type(self.block[0]) == type(1):
+            #    # horizontal stick
+            #    self.block = [[e] for e in self.block]
             #if len(self.block[0]) == 1:
             #     self.block = [r for [r] in  self.block]
-            else:
+            #else:
                 rotated = list(zip(*self.block[::-1]))
                 self.block = list(list(x) for x in rotated)
-            return
+                return
 
         def __iter__(self):
             '''
@@ -285,7 +285,8 @@ class Playscreen():
             except BlockTooLeftError:
                 self.active_block_pos[1] = 0
             except BlockTooLowError:
-                self.new_Block()
+                pass
+#                self.new_Block()
             # input new block
             self.insert_active_block()
             after = self.counting(self.playmatrix)
