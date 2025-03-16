@@ -108,8 +108,8 @@ class Playscreen():
             width,
             height,
             block = None):
-        self.playscreen = zero_matrix(width, height)
-        self.blocks = []
+        self.playmatrix = zero_matrix(width, height)
+        self.background_blocks = []
         self.active_block_pos = [0,0]
         if not block:
             block = Block()
@@ -118,10 +118,10 @@ class Playscreen():
 #        self.add_Block(block = block)
         
     def get_width(self):
-        return len(self.playscreen[0])
+        return len(self.playmatrix[0])
         
     def get_height(self):
-        return len(self.playscreen)
+        return len(self.playmatrix)
 
     def new_Block(self):
         #self.active_Block to background, then None
@@ -145,16 +145,16 @@ class Playscreen():
         if not pos:
             # if pos is not given,
             # take the top-middle
-            pos =  [0, int((len(self.playscreen[0])-block.get_width()+1)/2)]
+            pos =  [0, int((len(self.playmatrix[0])-self.active_block.get_width()+1)/2)]
         self.active_block_pos = pos
         x, y = self.active_block_pos
         free = True
         # self.active_block = block
-        for i in range(block.get_width()):
-            for j in range(block.get_height()):
+        for i in range(self.active_block.get_width()):
+            for j in range(self.active_block.get_height()):
                 _x = x + i
                 _y = y + j
-                if self.playscreen[_x][_y] and block[i][j]:
+                if self.playmatrix[_x][_y] and self.active_block[i][j]:
                     free = False
         if free:
 # DEBUGGING
@@ -178,7 +178,7 @@ class Playscreen():
         block = self.active_block
         _x, _y = self.active_block_pos
         for x, y in self.get_block_pos(block):
-                self.playscreen[x][y] = block.block[_y-y][_x-x]
+                self.playmatrix[x][y] = block.block[_y-y][_x-x]
                 
     def erase_active_block(self):
           block = self.active_block
@@ -190,7 +190,7 @@ class Playscreen():
 #                print(i,j)
                 _x = x + i
                 _y = y + j
-                self.playscreen[_x][_y] = 0
+                self.playmatrix[_x][_y] = 0
                 
     def counting(self, matrix, what_to_count = None):
             '''
@@ -239,7 +239,7 @@ class Playscreen():
             print(row)
             
     def move(self, direction):
-            before = self.counting(self.playscreen)
+            before = self.counting(self.playmatrix)
             # delete old block
             self.erase_active_block()
             # move block (old -> new)
@@ -258,13 +258,13 @@ class Playscreen():
                 self.new_Block()
             # input new block
             self.insert_active_block()
-            after = self.counting(self.playscreen)
+            after = self.counting(self.playmatrix)
 # DEBUGGING
 #            print(f"{direction}: before: {before}, after: {after}")
 #        if before != after: block blocked, reverse movement
             
     def print_me(self):
-            print_matrix(self.playscreen)
+            print_matrix(self.playmatrix)
         
 
 if __name__ == "__main__":

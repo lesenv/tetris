@@ -40,6 +40,7 @@ class Test_Moving_Tiles(unittest.TestCase):
                                  )
         # playscreens
         self.playscreen4x4s = logic.Playscreen(4,4, block = self.S_BLOCK)
+        self.playscreen4x4s.new_Block()
         self.playscreen10x10z = logic.Playscreen(10, 10, block = self.Z_BLOCK)
                                                                                           
     def test_turning_block(self):
@@ -66,7 +67,7 @@ class Test_Moving_Tiles(unittest.TestCase):
 ##        logic.print_matrix(self.playscreen4x4s.playscreen)
 ##        print("ˆ<- logic  dsp->V")
 ##        logic.print_matrix(dsp)
-        self.assertEqual(self.playscreen4x4s.playscreen, dsp, "playscreen didn't equal to 4x4-0-matrix")
+        self.assertEqual(self.playscreen4x4s.playmatrix, dsp, "playscreen didn't equal to 4x4-0-matrix")
         
     def test_fall_block(self):
         #fallen_playscreen = fp
@@ -79,15 +80,15 @@ class Test_Moving_Tiles(unittest.TestCase):
 ##        logic.print_matrix(self.playscreen4x4s.playscreen)
 ##        print("ˆ<- logic  dsp->V")
 ##        logic.print_matrix(fp)
-        self.assertEqual(self.playscreen4x4s.playscreen, fp , "fell not okay")
+        self.assertEqual(self.playscreen4x4s.playmatrix, fp , "fell not okay")
         
     def test_fall_stopping_at_the_bottom(self):
 # DEBUGGING
         self.playscreen4x4s.move(logic.MOVE_DOWN)
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        bottom_screen = self.playscreen4x4s.playscreen
+        bottom_screen = self.playscreen4x4s.playmatrix
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        self.assertEqual(self.playscreen4x4s.playscreen, bottom_screen, "Block moved, obwohl Block is at the bottom")
+        self.assertEqual(self.playscreen4x4s.playmatrix, bottom_screen, "Block moved, obwohl Block is at the bottom")
         
         
 if __name__ == "__main__":

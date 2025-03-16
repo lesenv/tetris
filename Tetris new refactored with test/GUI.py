@@ -72,7 +72,7 @@ class Game():
 
         if self.game_active:
             #draw tetris-tiles
-            self.draw_tetris(self.game_logic.playscreen)
+            self.draw_tetris(self.game_logic.playmatrix)
             #drawing background
             self.backgroundSprites.draw(self.scr)
         else:
