@@ -1,7 +1,7 @@
 '''
 unifying moves fall(), go_left() and go_right to handle with exceptions?? then using constants like pygame.K_UP: logic.MOVE_DOWN, .MOVE_RIGHT, MOVE_LEFT
 '''
-from random import choice
+from Block import Block
 
 class BlockMovingError(IndexError):
     '''
@@ -42,10 +42,6 @@ MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
 MOVE_TURN = "turn"
 
-Z_BLOCK = [[1,1,0],[0,1,1]]
-S_BLOCK = [[0,1,1],[1,1,0]]
-BLOCKS = [Z_BLOCK, S_BLOCK]
-
 def print_matrix(m):
     '''printing nicely a matrix'''
     for line in m:
@@ -59,44 +55,6 @@ def zero_matrix(width, height):
     return [[0 for i in range(width)] for j in range(height)]
     
 
-class Block():
-        '''
-        return a tetris-block, able to turn
-        '''
-        def __init__(
-            self,
-            block = None
-            ):
-            if not block:
-                block = choice(BLOCKS)
-            self.block = block
-                
-        def get_width(self):
-            return len(self.block[0])
-            
-        def get_height(self):
-            return len(self.block)
-
-        def turn(self):
-            rotated = list(zip(*self.block[::-1]))
-            self.block = list(list(x) for x in rotated)
-            return
-
-        def __iter__(self):
-            '''
-            iterating through the whole self.block
-            giving the coords and the 0 or 1s
-            so it's possible to do:
-            for i, j, element in block:
-            :-)
-            '''
-            for i in range(self.get_height()):
-                for j in range(self.get_width()):
-                    yield i, j, self.block[i][j]
-            
-#        def __repr__(self):
-#            string = "\n".join(self.block)
-#            return string
 
 class Playscreen():
     '''
@@ -197,7 +155,7 @@ class Playscreen():
     def erase_active_block(self):
         ablock = self.active_block
         x, y = self.active_block_pos
-#       bw = ablock.get_width()#
+        bw = ablock.get_width()#
         bh = ablock.get_height()
         for i in range(bw):
             for j in range(bh):
@@ -250,9 +208,9 @@ class Playscreen():
         dummy = self.active_block
         absx, absy = self.active_block_pos
         dummy.turn()
-        for j, row in dummy.block:#
-            for i, el in row:
-                if dummy[i][j] and self.playmatrix[absx+i][absy+j]:
+        for j, row in enumerate(dummy.block):
+            for i, el in enumerate(row):
+                if dummy.block[j][i] and self.playmatrix[absy+j][absx+i]:
                     raise BlockBlockedError("wanting to turn but some Block is in the way")
         self.active_block.turn()
             
