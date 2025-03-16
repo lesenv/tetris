@@ -72,26 +72,14 @@ class Block():
             self.block = block
                 
         def get_width(self):
-            if type(self.block[0]) == type(1):
-                # horizontal stick
-                return len(self.block)
             return len(self.block[0])
             
         def get_height(self):
-            if type(self.block[0]) == type(1):
-                # horizontal stick
-                return 1
             return len(self.block)
 
         def turn(self):
-            if type(self.block[0]) == type(1):
-                # horizontal stick
-                self.block = [[e] for e in self.block]
-            #if len(self.block[0]) == 1:
-            #     self.block = [r for [r] in  self.block]
-            else:
-                rotated = list(zip(*self.block[::-1]))
-                self.block = list(list(x) for x in rotated)
+            rotated = list(zip(*self.block[::-1]))
+            self.block = list(list(x) for x in rotated)
             return
 
         def __iter__(self):
@@ -189,29 +177,29 @@ class Playscreen():
 
           
     def insert_active_block(self):
-          block = self.active_block
-          x, y = self.active_block_pos
+        ablock = self.active_block
+        x, y = self.active_block_pos
 #          for _x, _y in self.get_block_pos(block):
 #                self.playmatrix[_x][_y] = block.block[y-_y][x-_x]
 # DEBUGGING
 #          print(f"erase block {block} at {x, y}")
-          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))
-          for i in range(block.get_width()):
-            for j in range(block.get_height()):
+#          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))
+        bw = ablock.get_width()#
+        bh = ablock.get_height()
+        for i in range(bw):
+            for j in range(bh):
 #                print(i,j)
                 _x = x + i
                 _y = y + j
-                self.playmatrix[_x][_y] = block.block[j][i]
+                self.playmatrix[_x][_y] = ablock.block[j][i]
 #          print("alt:", self.playmatrix)
                 
     def erase_active_block(self):
-          block = self.active_block
-          x, y = self.active_block_pos
-# DEBUGGING
-#          print(f"erase block {block} at {x, y}")
-          for i in range(block.get_width()):
-            for j in range(block.get_height()):
-#                print(i,j)
+        bw = ablock.get_width()#
+        bh = ablock.get_height()
+        for i in range(bw):
+            for j in range(bh):
+#              print(i,j)
                 _x = x + i
                 _y = y + j
                 self.playmatrix[_x][_y] = 0
@@ -285,7 +273,8 @@ class Playscreen():
             except BlockTooLeftError:
                 self.active_block_pos[1] = 0
             except BlockTooLowError:
-                self.new_Block()
+                pass
+#                self.new_Block()
             # input new block
             self.insert_active_block()
             after = self.counting(self.playmatrix)
