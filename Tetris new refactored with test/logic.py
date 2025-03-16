@@ -166,6 +166,7 @@ class Playscreen():
             #Exception and lose game
 
     def get_block_pos(self, block, abs = True):
+    '''DOESN'T WORK'''
         x, y = self.active_block_pos
         for i in range(block.get_width()):
             for j in range(block.get_width()):
@@ -175,10 +176,20 @@ class Playscreen():
 
           
     def insert_active_block(self):
-        block = self.active_block
-        _x, _y = self.active_block_pos
-        for x, y in self.get_block_pos(block):
-                self.playmatrix[x][y] = block.block[_y-y][_x-x]
+          block = self.active_block
+          x, y = self.active_block_pos
+#          for _x, _y in self.get_block_pos(block):
+#                self.playmatrix[_x][_y] = block.block[y-_y][x-_x]
+# DEBUGGING
+#          print(f"erase block {block} at {x, y}")
+          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))
+          for i in range(block.get_width()):
+            for j in range(block.get_height()):
+#                print(i,j)
+                _x = x + i
+                _y = y + j
+                self.playmatrix[_x][_y] = block.block[j][i]
+          print("alt:", self.playmatrix)
                 
     def erase_active_block(self):
           block = self.active_block
