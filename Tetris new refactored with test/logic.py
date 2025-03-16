@@ -195,7 +195,9 @@ class Playscreen():
 #          print("alt:", self.playmatrix)
                 
     def erase_active_block(self):
-        bw = ablock.get_width()#
+        ablock = self.active_block
+        x, y = self.active_block_pos
+#       bw = ablock.get_width()#
         bh = ablock.get_height()
         for i in range(bw):
             for j in range(bh):
