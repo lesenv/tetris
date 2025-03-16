@@ -1,17 +1,13 @@
+from sre_constants import ANY
 import unittest
 import logic
 
 class Test_Blocks(unittest.TestCase):
     def setUp(self):
         # Blocks
-        self.threex1 = logic.Block([3,3,3])
+        self.threex1 = logic.Block([[3,3,3]])
         self.fourx3 = logic.Block([[4,4,4,4],[4,4,4,4],[4,4,4,4]])
         self.onex3 = logic.Block([[3],[3],[3]])
-# to test:
-              ### Block
-              ## getwidth()
-              ## getheight()
-              ## turn()
 
     def test_Block_getwidth(self):
         self.assertEqual(self.threex1.get_width(), 3)
@@ -22,6 +18,23 @@ class Test_Blocks(unittest.TestCase):
         self.assertEqual(self.threex1.get_height(), 1)
         self.assertEqual(self.onex3.get_height(), 3)
         self.assertEqual(self.fourx3.get_height(), 3)
+
+    def test_Block_iterate(self):
+        # normal matrix
+        result = logic.Block([[0,0,0,0],[1,2,3,4],[None, ANY, -1, "wer"]])
+        for i, j, res in self.fourx3:
+            result.block[i][j] = res
+        self.assertEqual(result.block, self.fourx3.block, "iterating doesn't work")
+        # matrix with width 1
+        result = logic.Block([[None], [ANY],[ "wer"]])
+        for i, j, res in self.onex3:
+            result.block[i][j] = res
+        self.assertEqual(result.block, self.onex3.block, "iterating doesn't work")
+        # matrix with height 1
+        result = logic.Block([[1, ANY,  "wer"]])
+        for i, j, res in self.threex1:
+            result.block[i][j] = res
+        self.assertEqual(result.block, self.threex1.block, "iterating doesn't work")
         
 
 class Test_Moving_Tiles(unittest.TestCase):
@@ -36,7 +49,7 @@ class Test_Moving_Tiles(unittest.TestCase):
                                   [1,1,0]]
                                   )
         self.tower_block = logic.Block(
-                                 [1,1,1,1]
+                                 [[1,1,1,1]]
                                  )
         # playscreens
         self.playscreen4x4s = logic.Playscreen(4,4, block = self.S_BLOCK)
@@ -51,7 +64,7 @@ class Test_Moving_Tiles(unittest.TestCase):
         self.tower_block.turn()
         self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
         self.tower_block.turn()
-        self.assertEqual(self.tower_block.block, [1,1, 1,1], "2nd turning tower not working")
+        self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
 
     def test_zero_matrix(self):
         self.assertEqual(logic.zero_matrix(2,2), [[0,0],[0,0]], "2-2 0-matrix didn't work")

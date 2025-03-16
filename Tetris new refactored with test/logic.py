@@ -40,6 +40,7 @@ setting global constants for easily using in methods
 MOVE_DOWN = "fall"
 MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
+MOVE_TURN = "turn"
 
 Z_BLOCK = [[1,1,0],[0,1,1]]
 S_BLOCK = [[0,1,1],[1,1,0]]
@@ -86,12 +87,24 @@ class Block():
             if type(self.block[0]) == type(1):
                 # horizontal stick
                 self.block = [[e] for e in self.block]
-            elif len(self.block[0]) == 1:
-                self.block = [r for [r] in  self.block]
+            #if len(self.block[0]) == 1:
+            #     self.block = [r for [r] in  self.block]
             else:
                 rotated = list(zip(*self.block[::-1]))
                 self.block = list(list(x) for x in rotated)
-            return 
+            return
+
+        def __iter__(self):
+            '''
+            iterating through the whole self.block
+            giving the coords and the 0 or 1s
+            so it's possible to do:
+            for i, j, element in block:
+            :-)
+            '''
+            for i in range(self.get_height()):
+                for j in range(self.get_width()):
+                    yield i, j, self.block[i][j]
             
 #        def __repr__(self):
 #            string = "\n".join(self.block)
@@ -166,7 +179,7 @@ class Playscreen():
             #Exception and lose game
 
     def get_block_pos(self, block, abs = True):
-    '''DOESN'T WORK'''
+        '''DOESN'T WORK yet'''
         x, y = self.active_block_pos
         for i in range(block.get_width()):
             for j in range(block.get_width()):
@@ -189,7 +202,7 @@ class Playscreen():
                 _x = x + i
                 _y = y + j
                 self.playmatrix[_x][_y] = block.block[j][i]
-          print("alt:", self.playmatrix)
+#          print("alt:", self.playmatrix)
                 
     def erase_active_block(self):
           block = self.active_block
@@ -245,9 +258,13 @@ class Playscreen():
 
     def turn(self):
         dummy = self.active_block
+        absx, absy = self.active_block_pos
         dummy.turn()
-        for row in dummy.block:
-            print(row)
+        for j, row in dummy.block:#
+            for i, el in row:
+                if dummy[i][j] and self.playmatrix[absx+i][absy+j]:
+                    raise BlockBlockedError("wanting to turn but some Block is in the way")
+        self.active_block.turn()
             
     def move(self, direction):
             before = self.counting(self.playmatrix)
@@ -261,6 +278,8 @@ class Playscreen():
                         self.go_left()
                     elif direction == MOVE_RIGHT:
                         self.go_right()
+                    elif direction == MOVE_TURN:
+                        self.turn()
             except BlockTooRightError:
                 self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
             except BlockTooLeftError:
@@ -291,17 +310,17 @@ if __name__ == "__main__":
     print("printing")
     tetris.print_me()
     print("Fall twice")
-    tetris.fall_down()
-    tetris.fall_down()
+    tetris.move(MOVE_DOWN)
+    tetris.move(MOVE_DOWN)
     tetris.print_me()
     print("go right once")
-    tetris.go_right()
+    tetris.move(MOVE_RIGHT)
     tetris.print_me()
     print("go left twice")
-    tetris.go_left()
-    tetris.go_left()
+    tetris.move(MOVE_LEFT)
+    tetris.move(MOVE_LEFT)
     tetris.print_me()
     print("turn")
-    tetris.turn()
+    tetris.move(MOVE_TURN)
     tetris.print_me()
     
