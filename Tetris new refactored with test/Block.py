@@ -1,5 +1,5 @@
 from random import choice
-
+# Blocks for tetris game
 Z_BLOCK = [[1,1,0],[0,1,1]]
 S_BLOCK = [[0,1,1],[1,1,0]]
 BLOCKS = [Z_BLOCK, S_BLOCK]

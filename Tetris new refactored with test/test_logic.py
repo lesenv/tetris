@@ -1,5 +1,5 @@
 import unittest
-import logic
+import logic #logic imports Block automatically
 
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
