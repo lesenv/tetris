@@ -68,7 +68,7 @@ class Playscreen():
             height,
             block = None):
         self.playmatrix = zero_matrix(width, height)
-        self.background_blocks = []
+        self.background_blocks = zero_matrix(width, height)
         self.active_block_pos = [0,0]
         if not block:
             block = Block()
@@ -82,24 +82,29 @@ class Playscreen():
     def get_height(self):
         return len(self.playmatrix)
 
-    def new_Block(self):
+    def active_block_to_background(self):
+        pass
+
+    def new_Block(
+            self,
+            block = None,
+            pos = None):
         #self.active_Block to background, then None
-        self.add_Block()
+        self.add_Block(block, pos)
 
     def add_Block(
             self,
             block = None,
             pos = None):
-        # if already existing, no new active_block
-        if self.active_block:
-            return
+        # copy active_block to background
+        self.active_block_to_background()
         # else get the preview block
         self.active_block = self.preview_block
         # preview getting from above
         # if not given, creating a new one
-        try:
+        if block:
             self.preview_block = block
-        except AttributeError:
+        else:
             self.preview_block = Block()
         if not pos:
             # if pos is not given,
@@ -109,11 +114,13 @@ class Playscreen():
         x, y = self.active_block_pos
         free = True
         # self.active_block = block
-        for i in range(self.active_block.get_width()):
-            for j in range(self.active_block.get_height()):
+        I, J = self.active_block.get_width(), self.active_block.get_height()
+        for i in range(I):
+            for j in range(J):
                 _x = x + i
                 _y = y + j
-                if self.playmatrix[_x][_y] and self.active_block[i][j]:
+                if self.playmatrix[_x][_y] and self.active_block.block[i][j]:
+                    # self.playmatrix should be the same as self.background_blocks
                     free = False
         if free:
 # DEBUGGING
@@ -199,8 +206,17 @@ class Playscreen():
             '''
             if not at the right border, go right
             '''
-            if self.active_block_pos[1] + self.active_block.get_width() >= self.get_width():
+            if self.active_block_pos[1] + self.active_block.get_width() + 1 >= self.get_width():
                 raise BlockTooRightError
+            # if there is another Block at the right, don't go right
+            y, x = self.active_block_pos
+            for i, j, el in self.active_block.block:
+                if not el:
+                    continue
+                _x = x + j
+                _y = y + i
+                if self.background_blocks[_x][_y]:
+                    raise BlockTooRightError
             #else: go right
             self.active_block_pos[1] += 1
 
@@ -210,16 +226,18 @@ class Playscreen():
         dummy.turn()
         for j, row in enumerate(dummy.block):
             for i, el in enumerate(row):
-                if dummy.block[j][i] and self.playmatrix[absy+j][absx+i]:
+                if dummy.block[j][i] and self.background_blocks[absy+j][absx+i]:
                     raise BlockBlockedError("wanting to turn but some Block is in the way")
         self.active_block.turn()
             
     def move(self, direction):
-            before = self.counting(self.playmatrix)
-            # delete old block
+ ##           # first counting,
+ ##           before = self.counting(self.playmatrix)
+ 
             self.erase_active_block()
-            # move block (old -> new)
+            # then move block (old -> new)
             try:
+                    self.dummy = self.active_block
                     if direction == MOVE_DOWN:
                         self.fall_down()
                     elif direction == MOVE_LEFT:
@@ -234,10 +252,14 @@ class Playscreen():
                 self.active_block_pos[1] = 0
             except BlockTooLowError:
                 pass
+#                self.active_block_2_background
 #                self.new_Block()
-            # input new block
+            except BlockBlockedError:
+                # didn't turn, just dummy
+                pass
+            # input new block if no error found
             self.insert_active_block()
-            after = self.counting(self.playmatrix)
+##############                    after = self.counting(self.playmatrix)
 # DEBUGGING
 #            print(f"{direction}: before: {before}, after: {after}")
 #        if before != after: block blocked, reverse movement
