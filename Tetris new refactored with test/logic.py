@@ -231,9 +231,9 @@ class Playscreen():
         self.active_block.turn()
             
     def move(self, direction):
- ##           # first counting,
- ##           before = self.counting(self.playmatrix)
- 
+            # first counting,
+            before = self.counting(self.playmatrix)
+            # then deleting old block,
             self.erase_active_block()
             # then move block (old -> new)
             try:
@@ -246,6 +246,7 @@ class Playscreen():
                         self.go_right()
                     elif direction == MOVE_TURN:
                         self.turn()
+                    after = self.counting(self.playmatrix)
             except BlockTooRightError:
                 self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
             except BlockTooLeftError:
