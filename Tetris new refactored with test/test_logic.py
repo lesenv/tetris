@@ -19,6 +19,7 @@ class Test_Moving_Tiles(unittest.TestCase):
         self.playscreen4x4s = logic.Playscreen(4,4, block = self.S_BLOCK)
         self.playscreen4x4s.new_Block()
         self.playscreen10x10z = logic.Playscreen(10, 10, block = self.Z_BLOCK)
+        self.playscreen10x10z.new_Block()
                                                                                           
     def test_turning_block(self):
         self.Z_BLOCK.turn()
@@ -40,10 +41,6 @@ class Test_Moving_Tiles(unittest.TestCase):
         dsp[0][2] = 1
         dsp[1][2], dsp[1][1] = 1, 1
         dsp[2][1] = 1
-# DEBUGGING
-##        logic.print_matrix(self.playscreen4x4s.playscreen)
-##        print("ˆ<- logic  dsp->V")
-##        logic.print_matrix(dsp)
         self.assertEqual(self.playscreen4x4s.playmatrix, dsp, "playscreen didn't equal to 4x4-0-matrix")
         
     def test_fall_block(self):
@@ -53,19 +50,42 @@ class Test_Moving_Tiles(unittest.TestCase):
         fp[2][2], fp[2][1] = 1, 1
         fp[3][1] = 1
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-# DEBUGGING
-##        logic.print_matrix(self.playscreen4x4s.playscreen)
-##        print("ˆ<- logic  dsp->V")
-##        logic.print_matrix(fp)
         self.assertEqual(self.playscreen4x4s.playmatrix, fp , "fell not okay")
+
+    def test_falling_block_collided_with_existing_block(self):
+        for _ in range(3):
+            self.playscreen10x10z.move(logic.MOVE_DOWN)
+        self.playscreen10x10z.new_Block()
+        self.playscreen10x10z.move(logic.MOVE_DOWN)
+        self.playscreen10x10z.move(logic.MOVE_DOWN)
         
     def test_fall_stopping_at_the_bottom(self):
-# DEBUGGING
         self.playscreen4x4s.move(logic.MOVE_DOWN)
         self.playscreen4x4s.move(logic.MOVE_DOWN)
         bottom_screen = self.playscreen4x4s.playmatrix
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        self.assertEqual(self.playscreen4x4s.playmatrix, bottom_screen, "Block moved, obwohl Block is at the bottom")
+        self.assertEqual(self.playscreen4x4s.playmatrix, bottom_screen, "Block moved, although Block is at the bottom")
+
+    def test_block_move_right(self):
+        test = logic.zero_matrix(10,10)
+        test[0][4] = 1
+        test[1][4], test[1][5] = 1, 1
+        test[2][5] = 1
+        self.playscreen10x10z.move(logic.MOVE_RIGHT)
+        self.assertEqual(self.playscreen10x10z.playmatrix, test, "didn't move right accordingly first time")
+        test = logic.zero_matrix(10,10)
+        test[0][6] = 1
+        test[1][6], test[1][7] = 1,1
+        test[2][7] = 1
+        self.playscreen10x10z.move(logic.MOVE_RIGHT)
+        self.assertEqual(self.playscreen10x10z.playmatrix, test, "didn't move right accordingly second time")
+
+    def test_block_too_right_at_the_right_side(self):
+        #for _ in range(3):
+        #    self.playscreen10x10z.move(logic.MOVE_RIGHT)
+        right_screen = self.playscreen10x10z.playmatrix
+        self.playscreen10x10z.move(logic.MOVE_RIGHT)
+        self.assertEqual(self.playscreen10x10z.playmatrix, right_screen, "Block moved, although Block is at the right border")
         
         
 if __name__ == "__main__":

@@ -82,6 +82,9 @@ class Playscreen():
     def get_height(self):
         return len(self.playmatrix)
 
+    def active_block_to_background(self):
+        pass
+
     def new_Block(self):
         #self.active_Block to background, then None
         self.add_Block()
@@ -90,16 +93,15 @@ class Playscreen():
             self,
             block = None,
             pos = None):
-        # if already existing, no new active_block
-        if self.active_block:
-            return
+        # copy active_block to background
+        self.active_block_to_background()
         # else get the preview block
         self.active_block = self.preview_block
         # preview getting from above
         # if not given, creating a new one
-        try:
+        if block:
             self.preview_block = block
-        except AttributeError:
+        else:
             self.preview_block = Block()
         if not pos:
             # if pos is not given,
@@ -201,6 +203,10 @@ class Playscreen():
             '''
             if self.active_block_pos[1] + self.active_block.get_width() >= self.get_width():
                 raise BlockTooRightError
+            # if there is another Block at the right, don't go right
+            for i, j, el in self.active_block.block:
+                if self.active_block_pos[1]+el*j:
+                    raise BlockTooRightError
             #else: go right
             self.active_block_pos[1] += 1
 
@@ -215,11 +221,13 @@ class Playscreen():
         self.active_block.turn()
             
     def move(self, direction):
+            # first counting,
             before = self.counting(self.playmatrix)
-            # delete old block
+            # then deleting old block,
             self.erase_active_block()
-            # move block (old -> new)
+            # then move block (old -> new)
             try:
+                    self.dummy = self.active_block
                     if direction == MOVE_DOWN:
                         self.fall_down()
                     elif direction == MOVE_LEFT:
@@ -228,16 +236,20 @@ class Playscreen():
                         self.go_right()
                     elif direction == MOVE_TURN:
                         self.turn()
+                    after = self.counting(self.playmatrix)
             except BlockTooRightError:
                 self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
             except BlockTooLeftError:
                 self.active_block_pos[1] = 0
             except BlockTooLowError:
                 pass
+#                self.active_block_2_background
 #                self.new_Block()
-            # input new block
+            except BlockBlockedError:
+                # didn't turn, just dummy
+                pass
+            # input new block if no error found
             self.insert_active_block()
-            after = self.counting(self.playmatrix)
 # DEBUGGING
 #            print(f"{direction}: before: {before}, after: {after}")
 #        if before != after: block blocked, reverse movement
