@@ -43,7 +43,10 @@ MOVE_RIGHT = "right"
 MOVE_TURN = "turn"
 
 def print_matrix(m):
-    '''printing nicely a matrix'''
+    '''
+    printing nicely a matrix
+    for DEBUGGING purposes
+    '''
     for line in m:
         print(line)
 
@@ -59,7 +62,7 @@ def zero_matrix(width, height):
 class Playscreen():
     '''
     giving a playscreen inhabiting
-    some blocks, block-blocking,
+    some blocks, not block-blocking,
     don't let them get out of bound'
     '''
     def __init__(
@@ -77,18 +80,36 @@ class Playscreen():
 #        self.add_Block(block = block)
         
     def get_width(self):
+        '''return width of playmatrix'''
         return len(self.playmatrix[0])
         
     def get_height(self):
+        '''return height of playmatrix'''
         return len(self.playmatrix)
 
     def active_block_to_background(self):
+        '''
+        when Block stops moving and
+        becomes part of the Background
+
+        ?? storing color ??
+        ?? or in GUI ??
+        '''
         pass
 
     def new_Block(
             self,
             block = None,
             pos = None):
+        '''
+        create new Block:
+        - deactivate the active Block
+        - activate the preview block
+    !!!!!!!                        !!!!!!!!
+    !!! Not done in add_Block() anymore !!!
+    !!!!!!!                        !!!!!!!!
+        - create a new one for the preview
+        '''
         #self.active_Block to background, then None
         self.add_Block(block, pos)
 
@@ -96,6 +117,9 @@ class Playscreen():
             self,
             block = None,
             pos = None):
+        '''
+        
+        '''
         # copy active_block to background
         self.active_block_to_background()
         # else get the preview block
