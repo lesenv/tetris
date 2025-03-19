@@ -223,6 +223,10 @@ class Playscreen():
             return count
             
     def fall_down(self):
+        '''
+        active Block falls a step,
+        if it's not at the bottom
+        '''
             if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
                 raise BlockTooLowError
             #else: go down
@@ -266,6 +270,13 @@ class Playscreen():
         self.active_block.turn()
             
     def move(self, direction):
+'''
+!!! First try, then Check if there is a
+!!! collision, Not in every sub function 
+to be called from outside
+??? Change all the turn, fall and go_?-
+??? functions to __-functions?
+'''
             # first counting,
             before = self.counting(self.playmatrix)
             # then deleting old block,
@@ -291,6 +302,8 @@ class Playscreen():
 #                self.active_block_2_background
 #                self.new_Block()
             except BlockBlockedError:
+# later there are Others when old blocks in the way
+# make another Exception!!!
                 # didn't turn, just dummy
                 pass
             # input new block if no error found
@@ -301,6 +314,10 @@ class Playscreen():
 #        if before != after: block blocked, reverse movement
             
     def print_me(self):
+        '''
+        print playmatrix nicely
+        to be called from outside
+        '''
             print_matrix(self.playmatrix)
         
 
