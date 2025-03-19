@@ -107,6 +107,7 @@ class Playscreen():
         - activate the preview block
     !!!!!!!                        !!!!!!!!
     !!! Not done in add_Block() anymore !!!
+    !!!      pos, too!                  !!!
     !!!!!!!                        !!!!!!!!
         - create a new one for the preview
         '''
@@ -118,7 +119,9 @@ class Playscreen():
             block = None,
             pos = None):
         '''
-        
+        Check if there is no Block blocking
+        the new one,
+        else lose the Game!!
         '''
         # copy active_block to background
         self.active_block_to_background()
@@ -166,6 +169,9 @@ class Playscreen():
 
           
     def insert_active_block(self):
+        '''
+        copy active block to playmatrix
+        '''
         ablock = self.active_block
         x, y = self.active_block_pos
 #          for _x, _y in self.get_block_pos(block):
@@ -184,9 +190,14 @@ class Playscreen():
 #          print("alt:", self.playmatrix)
                 
     def erase_active_block(self):
+        '''
+        delete active block from playmatrix
+        '''
         ablock = self.active_block
         x, y = self.active_block_pos
-        bw = ablock.get_width()#
+        # just call functions once,
+        # not every turn in for-loops
+        bw = ablock.get_width()
         bh = ablock.get_height()
         for i in range(bw):
             for j in range(bh):
