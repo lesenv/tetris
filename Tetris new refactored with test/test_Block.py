@@ -44,10 +44,10 @@ class Test_Blocks(unittest.TestCase):
         self.assertEqual(result.block, self.threex1.block, "iterating doesn't work")
         # ascending without using Matrix in Loop
         twobythree = Block([[0,1,1],[3,4,1]])
-        for i, j, _ in twobythree:
-            twobythree.block[i][j] = i+j+2
+        for l, [i, j, _] in enumerate(twobythree):
+            lplus = l//len(twobythree.block[0])
+            twobythree.block[i][j] = i+j+lplus
         self.assertEqual(twobythree.block, self.ascend.block, "ascending doesn't work")
-        
         
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
