@@ -22,10 +22,7 @@ class Test_Blocks(unittest.TestCase):
     def test_Block_iterate(self):
         '''
         Test if the iterator is working indeed
-        by copying known matrices to Others
-
-!!! use some Matrix with ascending values
-[[0,1,2],[3,4,5]]
+        by copying known matrices to others
         '''
         # normal matrix
         result = Block([[0,0,0,0],[1,2,3,4],[None, [34, 234,4564], -1, "wer"]])
