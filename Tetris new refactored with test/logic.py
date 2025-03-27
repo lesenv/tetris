@@ -2,38 +2,7 @@
 unifying moves fall(), go_left() and go_right to handle with exceptions?? then using constants like pygame.K_UP: logic.MOVE_DOWN, .MOVE_RIGHT, MOVE_LEFT
 '''
 from Block import Block
-
-class BlockMovingError(IndexError):
-    '''
-    template for different types when
-    moving Blocks out of the Box of
-    the playscreen
-    '''
-
-class BlockTooLowError(BlockMovingError):
-    '''
-    when the active Block moves
-    to the last line
-    '''
-    
-class BlockTooRightError(BlockMovingError):
-    '''
-    when the active Block moves
-    too right out of the playscreen
-    '''
-    
-class BlockTooLeftError(BlockMovingError):
-    '''
-    when the active Block moves
-    too left out of the playscreen
-    '''
-    
-class BlockBlockedError(BlockMovingError):
-    '''
-    when trying to move to or creating
-    a Block interfering with an already
-    existing Block
-    '''
+from Exceptions import *
 '''
 setting global constants for easily using in methods
 '''
@@ -75,9 +44,9 @@ class Playscreen():
         self.active_block_pos = [0,0]
         if not block:
             block = Block()
-        self.preview_block = block
-        self.active_block = None
-#        self.add_Block(block = block)
+        self.preview_block = Block()
+        self.active_block = block
+        self._add_Block(block = block)
         
     def get_width(self):
         '''return width of playmatrix'''
@@ -112,9 +81,9 @@ class Playscreen():
         - create a new one for the preview
         '''
         #self.active_Block to background, then None
-        self.add_Block(block, pos)
+        self._add_Block(block, pos)
 
-    def add_Block(
+    def _add_Block(
             self,
             block = None,
             pos = None):
@@ -125,8 +94,8 @@ class Playscreen():
         '''
         # copy active_block to background
         self.active_block_to_background()
-        # else get the preview block
-        self.active_block = self.preview_block
+        # get the preview block else new one
+        self.active_block = self.preview_block if self.preview_block else Block()
         # preview getting from above
         # if not given, creating a new one
         if block:
@@ -207,57 +176,57 @@ class Playscreen():
                 self.playmatrix[_x][_y] = 0
                 
     def counting(self, matrix, what_to_count = None):
-            '''
-            count how many what_to_count-elements there are
-            if None, counting how many non-Zeros
-            '''
-            count = 0
-            if what_to_count:
-                for row in matrix:
-                    count += row.count(what_to_count)
-            else:
-                for row in matrix:
-                    for el in row:
-                        if el:
-                            count += 1
-            return count
+        '''
+        count how many what_to_count-elements there are
+        if None, counting how many non-Zeros
+        '''
+        count = 0
+        if what_to_count:
+            for row in matrix:
+                count += row.count(what_to_count)
+        else:
+            for row in matrix:
+                for el in row:
+                    if el:
+                        count += 1
+        return count
             
     def fall_down(self):
         '''
         active Block falls a step,
         if it's not at the bottom
         '''
-            if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
-                raise BlockTooLowError
-            #else: go down
-            self.active_block_pos[0] += 1
+        if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
+            raise BlockTooLowError
+        #else: go down
+        self.active_block_pos[0] += 1
                                         
     def go_left(self):
-            '''
-            if not at the left border, go left
-            '''
-            if self.active_block_pos[1] == 0:
-                raise BlockTooLeftError
-            #else: go left
-            self.active_block_pos[1] -= 1
+        '''
+        if not at the left border, go left
+        '''
+        if self.active_block_pos[1] == 0:
+            raise BlockTooLeftError
+        #else: go left
+        self.active_block_pos[1] -= 1
             
     def go_right(self):
-            '''
-            if not at the right border, go right
-            '''
-            if self.active_block_pos[1] + self.active_block.get_width() + 1 >= self.get_width():
-                raise BlockTooRightError
-            # if there is another Block at the right, don't go right
-            y, x = self.active_block_pos
-            for i, j, el in self.active_block.block:
-                if not el:
-                    continue
-                _x = x + j
-                _y = y + i
-                if self.background_blocks[_x][_y]:
-                    raise BlockTooRightError
-            #else: go right
-            self.active_block_pos[1] += 1
+        '''
+        if not at the right border, go right
+        '''
+        if self.active_block_pos[1] + self.active_block.get_width() + 1 >= self.get_width():
+            raise BlockTooRightError("right border is right there, so stop")
+        # if there is another Block at the right, don't go right
+        y, x = self.active_block_pos
+        for i, j, el in self.active_block.block:
+            if not el:
+                continue
+            _x = x + j
+            _y = y + i
+            if self.background_blocks[_x][_y]:
+                raise BlockTooRightError("there is another Block right to you, so don't go any more right")
+        #else: go right
+        self.active_block_pos[1] += 1
 
     def turn(self):
         dummy = self.active_block
@@ -270,44 +239,44 @@ class Playscreen():
         self.active_block.turn()
             
     def move(self, direction):
-'''
-!!! First try, then Check if there is a
-!!! collision, Not in every sub function 
-to be called from outside
-??? Change all the turn, fall and go_?-
-??? functions to __-functions?
-'''
-            # first counting,
-            before = self.counting(self.playmatrix)
-            # then deleting old block,
-            self.erase_active_block()
-            # then move block (old -> new)
-            try:
-                    self.dummy = self.active_block
-                    if direction == MOVE_DOWN:
-                        self.fall_down()
-                    elif direction == MOVE_LEFT:
-                        self.go_left()
-                    elif direction == MOVE_RIGHT:
-                        self.go_right()
-                    elif direction == MOVE_TURN:
-                        self.turn()
-                    after = self.counting(self.playmatrix)
-            except BlockTooRightError:
-                self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
-            except BlockTooLeftError:
-                self.active_block_pos[1] = 0
-            except BlockTooLowError:
-                pass
+        '''
+        !!! First try, then Check if there is a
+        !!! collision, Not in every sub function 
+        to be called from outside
+        ??? Change all the turn, fall and go_?-
+        ??? functions to __-functions?
+        '''
+        # first counting,
+        before = self.counting(self.playmatrix)
+        # then deleting old block,
+        self.erase_active_block()
+        # then move block (old -> new)
+        try:
+                self.dummy = self.active_block
+                if direction == MOVE_DOWN:
+                    self.fall_down()
+                elif direction == MOVE_LEFT:
+                    self.go_left()
+                elif direction == MOVE_RIGHT:
+                    self.go_right()
+                elif direction == MOVE_TURN:
+                    self.turn()
+                after = self.counting(self.playmatrix)
+        except BlockTooRightError:
+            self.active_block_pos[1] = self.get_width()-self.active_block.get_width()-1
+        except BlockTooLeftError:
+            self.active_block_pos[1] = 0
+        except BlockTooLowError:
+            pass
 #                self.active_block_2_background
 #                self.new_Block()
-            except BlockBlockedError:
+        except BlockBlockedError:
 # later there are Others when old blocks in the way
 # make another Exception!!!
-                # didn't turn, just dummy
-                pass
-            # input new block if no error found
-            self.insert_active_block()
+            # didn't turn, just dummy
+            pass
+        # input new block if no error found
+        self.insert_active_block()
 ##############                    after = self.counting(self.playmatrix)
 # DEBUGGING
 #            print(f"{direction}: before: {before}, after: {after}")
@@ -318,7 +287,7 @@ to be called from outside
         print playmatrix nicely
         to be called from outside
         '''
-            print_matrix(self.playmatrix)
+        print_matrix(self.playmatrix)
         
 
 if __name__ == "__main__":
@@ -330,7 +299,7 @@ if __name__ == "__main__":
     tetris.preview_block = block1
     print("adding a block:")
     print_matrix(block1.block)
-    tetris.add_Block(block1)
+    tetris._add_Block(block1)
     print("printing")
     tetris.print_me()
     print("Fall twice")

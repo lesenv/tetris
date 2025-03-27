@@ -1,7 +1,7 @@
 import pygame
 import logic
 
-class Block(pygame.sprite.Sprite):
+class BlockSprite(pygame.sprite.Sprite):
     def __init__(self, color, dim):
         super().__init__()
         self.image = pygame.surface.Surface(dim)
@@ -89,7 +89,7 @@ class Game():
         for j, line in enumerate(game_matrix):
             for i, tile in enumerate(line):
                 if tile:
-                    t = Block("red", (self.d, self.d))
+                    t = BlockSprite("red", (self.d, self.d))
                     t.setPos(i, j)
                     container.add(t)
         # draw them
@@ -109,7 +109,7 @@ class Game():
         #background
         self.scr.fill((220,220,120))
         #playscreen
-        self.playscreen = Block("Black", (self.d*self.px, self.d*self.py))
+        self.playscreen = BlockSprite("Black", (self.d*self.px, self.d*self.py))
         self.playscreen.setPos(1/self.px,1/self.py)
         self.backgroundSprites.add(self.playscreen)
         #right side
@@ -119,14 +119,14 @@ class Game():
         right_start = box.right + self.d
         right_width = self.scr.get_width()- right_start - self.d
         right_top_height = box.height *2/3 - self.d
-        self.scorescreen = Block("Black", (right_width, right_top_height))
+        self.scorescreen = BlockSprite("Black", (right_width, right_top_height))
         self.scorescreen.setPosAbs(right_start, self.d)
         self.backgroundSprites.add(self.scorescreen)
         ###previewscreen
         ### (right bottom)
         right_preview_top = self.scorescreen.rect.bottom + self.d
         right_bottom_height = box.height - right_top_height - self.d
-        self.previewscreen = Block("Black", (right_width, right_bottom_height))
+        self.previewscreen = BlockSprite("Black", (right_width, right_bottom_height))
         self.previewscreen.setPosAbs(right_start, right_preview_top)
         self.backgroundSprites.add(self.previewscreen)
         
@@ -138,7 +138,8 @@ if __name__ == "__main__":
     
     # initialize pygame diplay and variables
     pygame.init()
-    SCREEN_WIDTH, SCREEN_HEIGHT = 720, 1438
+    SCREEN_WIDTH, SCREEN_HEIGHT = 720, 1438 # cellphone
+    SCREEN_WIDTH, SCREEN_HEIGHT = 400, 800 # laptop
     screen = pygame.display.set_mode(size=(SCREEN_WIDTH, SCREEN_HEIGHT))
     
     timer = pygame.time.Clock()

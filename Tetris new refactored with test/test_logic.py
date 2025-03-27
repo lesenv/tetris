@@ -68,15 +68,15 @@ class Test_Moving_Tiles(unittest.TestCase):
 
     def test_block_move_right(self):
         test = logic.zero_matrix(10,10)
-        test[0][4] = 1
-        test[1][4], test[1][5] = 1, 1
+        test[0][6] = 1
+        test[1][5], test[1][6] = 1, 1
         test[2][5] = 1
         self.playscreen10x10z.move(logic.MOVE_RIGHT)
         self.assertEqual(self.playscreen10x10z.playmatrix, test, "didn't move right accordingly first time")
         test = logic.zero_matrix(10,10)
-        test[0][6] = 1
+        test[0][7] = 1
         test[1][6], test[1][7] = 1,1
-        test[2][7] = 1
+        test[2][6] = 1
         self.playscreen10x10z.move(logic.MOVE_RIGHT)
         self.assertEqual(self.playscreen10x10z.playmatrix, test, "didn't move right accordingly second time")
 
