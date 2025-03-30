@@ -1,5 +1,5 @@
 #pylint:disable=C0103 #don't care about snake_case
-'''
+'''Logic of Tetris
 unifying moves fall(), go_left() and go_right
 to handle with exceptions??
 then using constants like pygame.K_UP: logic.MOVE_DOWN, .MOVE_RIGHT, MOVE_LEFT
