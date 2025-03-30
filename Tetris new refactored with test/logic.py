@@ -1,5 +1,8 @@
+#pylint:disable=C0103 #don't care about snake_case
 '''
-unifying moves fall(), go_left() and go_right to handle with exceptions?? then using constants like pygame.K_UP: logic.MOVE_DOWN, .MOVE_RIGHT, MOVE_LEFT
+unifying moves fall(), go_left() and go_right
+to handle with exceptions??
+then using constants like pygame.K_UP: logic.MOVE_DOWN, .MOVE_RIGHT, MOVE_LEFT
 '''
 from Block import Block
 from Exceptions import *
@@ -11,15 +14,15 @@ MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
 MOVE_TURN = "turn"
 
-def print_matrix(m):
+def print_matrix(matrix : list[list[int]]) -> None:
     '''
     printing nicely a matrix
     for DEBUGGING purposes
     '''
-    for line in m:
+    for line in matrix:
         print(line)
 
-def zero_matrix(width, height):
+def zero_matrix(width : int, height : int) -> list[list[int]]:
     '''
     return 0-matrix with given
     width and height
@@ -36,9 +39,9 @@ class Playscreen():
     '''
     def __init__(
             self,
-            width,
-            height,
-            block = None):
+            width: int,
+            height: int,
+            block: Block | None = None) -> None:
         self.playmatrix = zero_matrix(width, height)
         self.background_blocks = zero_matrix(width, height)
         self.active_block_pos = [0,0]
@@ -48,11 +51,11 @@ class Playscreen():
         self.active_block = block
         self._add_Block(block = block)
         
-    def get_width(self):
+    def get_width(self) -> int:
         '''return width of playmatrix'''
         return len(self.playmatrix[0])
         
-    def get_height(self):
+    def get_height(self) -> int:
         '''return height of playmatrix'''
         return len(self.playmatrix)
 
@@ -94,30 +97,20 @@ class Playscreen():
         '''
         # copy active_block to background
         self.active_block_to_background()
-        # get the preview block else new one
+        # active getting from the preview block
+        # else new one
         self.active_block = self.preview_block if self.preview_block else Block()
         # preview getting from above
         # if not given, creating a new one
-        if block:
-            self.preview_block = block
-        else:
-            self.preview_block = Block()
+        self.preview_block = block if block else Block()
         if not pos:
             # if pos is not given,
             # take the top-middle
             pos =  [0, int((len(self.playmatrix[0])-self.active_block.get_width()+1)/2)]
         self.active_block_pos = pos
-        x, y = self.active_block_pos
-        free = True
+        free = self._is_block_free(self.active_block)
         # self.active_block = block
-        I, J = self.active_block.get_width(), self.active_block.get_height()
-        for i in range(I):
-            for j in range(J):
-                _x = x + i
-                _y = y + j
-                if self.playmatrix[_x][_y] and self.active_block.block[i][j]:
-                    # self.playmatrix should be the same as self.background_blocks
-                    free = False
+        
         if free:
 # DEBUGGING
 #          print_matrix(block.block)
@@ -126,6 +119,21 @@ class Playscreen():
         else:
             pass
             #Exception and lose game
+        
+    def _is_block_free(self, block: Block):
+        '''
+        return True if block isn't colliding
+        with background, otherwise False'
+        '''
+        x, y = self.active_block_pos
+        I, J = block.get_width(), block.get_height()
+        for i in range(I):
+            for j in range(J):
+                _x = x + i
+                _y = y + j
+                if self.playmatrix[_x][_y] and self.active_block.block[i][j]:
+                    # self.playmatrix should be the same as self.background_blocks
+                    free = False
 
     def get_block_pos(self, block, abs = True):
         '''DOESN'T WORK yet'''
