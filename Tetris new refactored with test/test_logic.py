@@ -1,5 +1,9 @@
+'''
+tests the units in logic.py
+importing logic imports Block automatically
+'''
 import unittest
-import logic #logic imports Block automatically
+import logic
 
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
