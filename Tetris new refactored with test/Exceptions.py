@@ -28,7 +28,7 @@ class BlockTooLeftError(BlockMovingError):
     
 class BlockBlockedError(BlockMovingError):
     '''
-    when trying to move to or creating
+    when trying to move or to create
     a Block interfering with an already
     existing Block
     '''
