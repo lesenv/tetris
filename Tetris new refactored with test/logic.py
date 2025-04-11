@@ -115,9 +115,6 @@ class Playscreen():
         if not self.preview_block:
             raise BlockingIOError("no preview_block, too bad. in _add_Block()")
         self.active_block = self.preview_block
-        # preview getting from above
-        # if not given, creating a new one
-        self.preview_block = block if block else Block()
         # if pos is not given,
         # take the top-middle    
         if not pos:
@@ -128,7 +125,10 @@ class Playscreen():
 #          print_matrix(block.block)
 #          inserting active_block into playscreen
           self.insert_active_block()
-        else:
+        # preview getting from above
+        # if not given, creating a new one
+        self.preview_block = block if block else Block()
+       else:
             pass
             #Exception and lose game
         
