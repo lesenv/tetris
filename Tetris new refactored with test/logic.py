@@ -106,8 +106,6 @@ class Playscreen():
         the new one,
         else lose the Game!!
         '''
-        if not block:
-            return
         # copy active_block to background
         self.active_block_to_background()
         # active getting from the preview block
