@@ -8,6 +8,18 @@ class Test_Blocks(unittest.TestCase):
         self.fourx3 = Block([[4,4,4,4],[4,4,4,4],[4,4,4,4]])
         self.onex3 = Block([[3],[3],[3]])
         self.ascend = Block([[0,1,2],[3,4,5]])
+        # TetrisBlocks
+        self.Z_BLOCK = Block(
+                             [[1,1,0],
+                              [0,1,1]]
+                             )
+        self.S_BLOCK = Block(
+                             [[0,1,1],
+                              [1,1,0]]
+                             )
+        self.tower_block = Block(
+                                 [[1,1,1,1]]
+                                 )
 
     def test_Block_getwidth(self):
         self.assertEqual(self.threex1.get_width(), 3)
@@ -42,9 +54,19 @@ class Test_Blocks(unittest.TestCase):
         # ascending without using Matrix in Loop
         twobythree = Block([[0,1,1],[3,4,1]])
         for l, [i, j, _] in enumerate(twobythree):
-            lplus = l//len(twobythree.block[0])
+            lplus = l//twobythree.get_width()*twobythree.get_height()
             twobythree.block[i][j] = i+j+lplus
         self.assertEqual(twobythree.block, self.ascend.block, "ascending doesn't work")
+                                                                                          
+    def test_turning_block(self):
+        self.Z_BLOCK.turn()
+        self.assertEqual(self.Z_BLOCK.block, [[0,1], [1,1], [1,0]], "turning Z not working")
+        self.Z_BLOCK.turn()
+        self.assertEqual(self.Z_BLOCK.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
+        self.tower_block.turn()
+        self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
+        self.tower_block.turn()
+        self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
         
 if __name__ == "__main__":
     unittest.main(verbosity = 2)

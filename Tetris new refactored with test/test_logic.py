@@ -5,35 +5,31 @@ importing logic imports Block automatically
 import unittest
 import logic
 
+Z_BLOCK = [[1,1,0],[0,1,1]]
+S_BLOCK = [[0,1,1],[1,1,0]]
+
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
-        # TetrisBlocks
-        self.Z_BLOCK = logic.Block(
-                                 [[1,1,0],
-                                  [0,1,1]]
-                                  )
-        self.S_BLOCK = logic.Block(
-                                 [[0,1,1],
-                                  [1,1,0]]
-                                  )
-        self.tower_block = logic.Block(
-                                 [[1,1,1,1]]
-                                 )
         # playscreens
-        self.playscreen4x4s = logic.Playscreen(4,4, block = self.S_BLOCK)
-        self.playscreen4x4s.new_Block(self.S_BLOCK)
-        self.playscreen10x10z = logic.Playscreen(10, 10, block = self.Z_BLOCK)
-        self.playscreen10x10z.new_Block(self.Z_BLOCK)
+        self.playscreen4x4s = logic.Playscreen(4,4, block = logic.Block(S_BLOCK))
+        #self.playscreen4x4s.new_Block(self.S_BLOCK)
+        self.playscreen10x10z = logic.Playscreen(10, 10, block = logic.Block(Z_BLOCK))
+        #self.playscreen10x10z.new_Block(self.Z_BLOCK)
                                                                                           
     def test_turning_block(self):
-        self.Z_BLOCK.turn()
-        self.assertEqual(self.Z_BLOCK.block, [[0,1], [1,1], [1,0]], "turning Z not working")
-        self.Z_BLOCK.turn()
-        self.assertEqual(self.Z_BLOCK.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
-        self.tower_block.turn()
-        self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
-        self.tower_block.turn()
-        self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
+        #
+        # XXX using MOVE_TURN!!
+        # 
+        # self.Z_BLOCK.turn()
+        # self.assertEqual(self.Z_BLOCK.block, [[0,1], [1,1], [1,0]], "turning Z not working")
+        # self.Z_BLOCK.turn()
+        # self.assertEqual(self.Z_BLOCK.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
+        # self.tower_block.turn()
+        # self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
+        # self.tower_block.turn()
+        # self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
+        self.playscreen4x4s.move(logic.MOVE_TURN)
+
 
     def test_zero_matrix(self):
         self.assertEqual(logic.zero_matrix(2,2), [[0,0],[0,0]], "2-2 0-matrix didn't work")
@@ -94,4 +90,3 @@ class Test_Moving_Tiles(unittest.TestCase):
         
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
-    

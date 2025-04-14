@@ -123,12 +123,12 @@ class Playscreen():
 #          print_matrix(block.block)
 #          inserting active_block into playscreen
           self.insert_active_block()
+        else:
+            #Exception and lose game
+            pass
         # preview getting from above
         # if not given, creating a new one
         self.preview_block = block if block else Block()
-       else:
-            pass
-            #Exception and lose game
         
     def _is_block_free(self, block: Block) -> bool:
         '''
