@@ -248,7 +248,7 @@ class Playscreen():
         self.active_block_pos[1] += 1
 
     def turn(self):
-        dummy = self.active_block
+        dummy = Block(block = self.active_block.block)
         absx, absy = self.active_block_pos
         dummy.turn()
         for j, row in enumerate(dummy.block):

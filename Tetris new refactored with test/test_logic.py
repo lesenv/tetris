@@ -5,8 +5,10 @@ importing logic imports Block automatically
 import unittest
 import logic
 
-Z_BLOCK = [[1,1,0],[0,1,1]]
-S_BLOCK = [[0,1,1],[1,1,0]]
+S_BLOCK = [[1,1,0],
+           [0,1,1]]
+Z_BLOCK = [[0,1,1],
+           [1,1,0]]
 
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
@@ -15,6 +17,19 @@ class Test_Moving_Tiles(unittest.TestCase):
         #self.playscreen4x4s.new_Block(self.S_BLOCK)
         self.playscreen10x10z = logic.Playscreen(10, 10, block = logic.Block(Z_BLOCK))
         #self.playscreen10x10z.new_Block(self.Z_BLOCK)
+
+    def test_setup(self):
+        test_4x4s = [[0,1,0,0],
+                     [0,1,1,0],
+                     [0,0,1,0],
+                     [0,0,0,0]]
+        self.assertEqual(self.playscreen4x4s.playmatrix,test_4x4s, "4x4s doesn't work")
+
+        test_5x4z = [[0,0,1,0,0],
+                     [0,1,1,0,0],
+                     [0,1,0,0,0],
+                     [0,0,0,0,0]]
+        self.assertEqual(logic.Playscreen(5,4,block=logic.Block(Z_BLOCK)).playmatrix, test_5x4z,"5x4z didn't work")
                                                                                           
     def test_turning_block(self):
         #
@@ -29,6 +44,11 @@ class Test_Moving_Tiles(unittest.TestCase):
         # self.tower_block.turn()
         # self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
         self.playscreen4x4s.move(logic.MOVE_TURN)
+        test_4x4s_one_turn = [[0,1,0,0],
+                              [0,1,1,0],
+                              [0,0,1,0],
+                              [0,0,0,0]]
+        self.playscreen4x4s.move(logic.MOVE_TURN)
 
 
     def test_zero_matrix(self):
@@ -38,17 +58,17 @@ class Test_Moving_Tiles(unittest.TestCase):
     def test_default_block(self):
         #default_start_playscreen = dsp
         dsp = logic.zero_matrix(4, 4)
-        dsp[0][2] = 1
+        dsp[0][1] = 1
         dsp[1][2], dsp[1][1] = 1, 1
-        dsp[2][1] = 1
+        dsp[2][2] = 1
         self.assertEqual(self.playscreen4x4s.playmatrix, dsp, "playscreen didn't equal to 4x4-0-matrix")
         
     def test_fall_block(self):
         #fallen_playscreen = fp
         fp = logic.zero_matrix(4, 4)
-        fp[1][2] = 1
+        fp[1][1] = 1
         fp[2][2], fp[2][1] = 1, 1
-        fp[3][1] = 1
+        fp[3][2] = 1
         self.playscreen4x4s.move(logic.MOVE_DOWN)
         self.assertEqual(self.playscreen4x4s.playmatrix, fp , "fell not okay")
 
