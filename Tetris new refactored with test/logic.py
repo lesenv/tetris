@@ -196,8 +196,12 @@ class Playscreen():
                 _y = y + j
                 self.playmatrix[_x][_y] = 0
                 
-    def counting(self, matrix, what_to_count = None):
+    def _counting(self, matrix, what_to_count = None):
         '''
+        ???
+        ? ? ? TO BE DELETED ? ? ?????
+        ???
+
         count how many what_to_count-elements there are
         if None, counting how many non-Zeros
         '''
@@ -212,7 +216,7 @@ class Playscreen():
                         count += 1
         return count
             
-    def fall_down(self):
+    def _fall_down(self):
         '''
         active Block falls a step,
         if it's not at the bottom
@@ -222,7 +226,7 @@ class Playscreen():
         #else: go down
         self.active_block_pos[0] += 1
                                         
-    def go_left(self):
+    def _go_left(self):
         '''
         if not at the left border, go left
         '''
@@ -231,78 +235,64 @@ class Playscreen():
         #else: go left
         self.active_block_pos[1] -= 1
             
-    def go_right(self):
+    def _go_right(self):
         '''
         if not at the right border, go right
         '''
         if self.active_block_pos[1] + self.active_block.get_width() + 1 >= self.get_width():
             raise BlockTooRightError(f"right border is right there, so stop") #:\nself.active_block_pos[1] = {self.active_block_pos[1]}\nself.active_block.get_width() = {self.active_block.get_width()}\nself.get_width() = {self.get_width()}")
-        # if there is another Block at the right, don't go right
-        y, x = self.active_block_pos
-        for i, j, el in self.active_block.block:
-            if not el:
-                continue
-            _x = x + j
-            _y = y + i
-            if self.background_blocks[_x][_y]:
-                raise BlockTooRightError("there is another Block right to you, so don't go any more right")
-        #else: go right
         self.active_block_pos[1] += 1
 
-    def turn(self):
-        dummy = Block(block = self.active_block.block)
-        absx, absy = self.active_block_pos
-        dummy.turn()
-        for j, row in enumerate(dummy.block):
-            for i, el in enumerate(row):
-                if dummy.block[j][i] and self.background_blocks[absy+j][absx+i]:
-                    raise BlockBlockedError("wanting to turn but some Block is in the way")
+    def _turn_active_block(self):
         self.active_block.turn()
             
     def move(self, direction):
         '''
         !!! First try, then Check if there is a
-        !!! collision, Not in every sub function 
-        to be called from outside
-        ??? Change all the turn, fall and go_?-
-        ??? functions to __-functions?
+        !!! collision (counting went down), 
+        !!! Not in every sub function to be called from outside
         '''
         # first counting,
-        before = self.counting(self.playmatrix)
+        before = self._counting(self.playmatrix)
         # then deleting old block,
         self.erase_active_block()
         # then move block (old -> new)
         try:
-                self.dummy = self.active_block
+                self.dummy = Block(block = self.active_block)
                 if direction == MOVE_DOWN:
-                    self.fall_down()
+                    self._fall_down()
                 elif direction == MOVE_LEFT:
-                    self.go_left()
+                    self._go_left()
                 elif direction == MOVE_RIGHT:
-                    self.go_right()
+                    self._go_right()
                 elif direction == MOVE_TURN:
-                    self.turn()
-                after = self.counting(self.playmatrix)
+                    self._turn_active_block()
         except BlockTooRightError as e:
             #self.active_block_pos[1] = self.get_width()-self.active_block.get_width()
             print("went too right", e)
-        except BlockTooLeftError:
+        except BlockTooLeftError as e:
+            print("went too left", e)
             self.active_block_pos[1] = 0
         except BlockTooLowError:
             pass
 #                self.active_block_2_background
 #                self.new_Block()
-        except BlockBlockedError:
-# later there are Others when old blocks in the way
-# make another Exception!!!
-            # didn't turn, just dummy
-            pass
         # input new block if no error found
         self.insert_active_block()
-##############                    after = self.counting(self.playmatrix)
-# DEBUGGING
-#            print(f"{direction}: before: {before}, after: {after}")
-#        if before != after: block blocked, reverse movement
+        if self._counting(self.playmatrix) < before:
+            self.erase_active_block()
+            # if before != after: block blocked, reverse movement
+            if direction == MOVE_DOWN:
+                self.active_block_pos[0] -= 1
+            elif direction == MOVE_LEFT:
+                self.active_block_pos[1] += 1
+            elif direction == MOVE_RIGHT:
+                self.active_block_pos[1] -= 1
+            elif direction == MOVE_TURN:
+                for _ in range(3):
+                    self._turn_active_block()
+        self.insert_active_block()
+
             
     def print_me(self):
         '''

@@ -58,9 +58,9 @@ class Game():
                 elif event.key == pygame.K_LEFT:
                     self.game_logic.move(logic.MOVE_LEFT)
                 elif event.key == pygame.K_RIGHT:
-                    self.game_logic.go_right()
+                    self.game_logic._go_right()
                 elif event.key == pygame.K_UP:
-                    self.game_logic.turn()
+                    self.game_logic._turn_active_block()
                 elif event.key == pygame.K_DOWN:
                     self.game_logic.move(logic.MOVE_DOWN)
             elif event.type == pygame.FINGERDOWN:

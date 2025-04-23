@@ -37,7 +37,7 @@ class Block():
             '''
             for i in range(self.get_height()):
                 for j in range(self.get_width()):
-                    yield i, j, self.block[i][j]
+                    yield (i, j, self.block[i][j])
             
 #        def __repr__(self):
 #            string = "\n".join(self.block)

@@ -33,22 +33,9 @@ class Test_Moving_Tiles(unittest.TestCase):
                                                                                           
     def test_turning_block(self):
         #
-        # XXX using MOVE_TURN!!
+        # since we're testing logic.py, use MOVE_TURN!!
         # 
-        # self.Z_BLOCK.turn()
-        # self.assertEqual(self.Z_BLOCK.block, [[0,1], [1,1], [1,0]], "turning Z not working")
-        # self.Z_BLOCK.turn()
-        # self.assertEqual(self.Z_BLOCK.block, [[1,1,0], [0,1,1]], "2nd turning Z not working")
-        # self.tower_block.turn()
-        # self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
-        # self.tower_block.turn()
-        # self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
 
-
-        #test_4x4s_one_turn = [[0,1,0,0],
-        #                      [0,1,1,0],
-        #                      [0,0,1,0],
-        #                      [0,0,0,0]]
         self.playscreen4x4s.move(logic.MOVE_TURN)
         test_4x4s_one_turn = [[0,0,1,1],
                               [0,1,1,0],
