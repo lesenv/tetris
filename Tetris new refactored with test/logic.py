@@ -198,10 +198,6 @@ class Playscreen():
                 
     def _counting(self, matrix, what_to_count = None):
         '''
-        ???
-        ? ? ? TO BE DELETED ? ? ?????
-        ???
-
         count how many what_to_count-elements there are
         if None, counting how many non-Zeros
         '''
@@ -248,9 +244,8 @@ class Playscreen():
             
     def move(self, direction):
         '''
-        !!! First try, then Check if there is a
-        !!! collision (counting went down), 
-        !!! Not in every sub function to be called from outside
+            First try, then Check if there is a
+            collision (counting went down)
         '''
         # first counting,
         before = self._counting(self.playmatrix)
@@ -304,7 +299,7 @@ class Playscreen():
 
 if __name__ == "__main__":
     print("LOS")
-    tetris = Playscreen(6,17)
+    tetris = Playscreen(22,13)
     tetris.print_me()
     print("creating a block")
     block1 = Block()
