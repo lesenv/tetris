@@ -118,7 +118,7 @@ class Playscreen():
         if not pos:
             pos =  [0, int((len(self.playmatrix[0])-self.active_block.get_width()+1)/2)]
         self.active_block_pos = pos
-        if self._is_block_free(self.active_block):
+        if self._is_block_free(self.active_block, pos):
 # DEBUGGING
 #          print_matrix(block.block)
 #          inserting active_block into playscreen
@@ -130,12 +130,12 @@ class Playscreen():
         # if not given, creating a new one
         self.preview_block = block if block else Block()
         
-    def _is_block_free(self, block: Block) -> bool:
+    def _is_block_free(self, block: Block, pos: list[int, int]) -> bool:
         '''
         return True if block isn't colliding
-        with background, otherwise False'
+        with background, otherwise False
         '''
-        x, y = self.active_block_pos
+        x, y = pos
         I, J = block.get_width(), block.get_height()
         for i in range(I):
             for j in range(J):
@@ -147,7 +147,9 @@ class Playscreen():
         return True
 
     def get_block_pos(self, block, abs = True):
-        '''DOESN'T WORK yet'''
+        '''DOESN'T WORK yet
+        perhaps not needed
+        '''
         x, y = self.active_block_pos
         for i in range(block.get_width()):
             for j in range(block.get_width()):

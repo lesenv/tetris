@@ -43,12 +43,25 @@ class Test_Moving_Tiles(unittest.TestCase):
         # self.assertEqual(self.tower_block.block, [[1],[1], [1],[1]], "turning tower not working")
         # self.tower_block.turn()
         # self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
+
+
+        #test_4x4s_one_turn = [[0,1,0,0],
+        #                      [0,1,1,0],
+        #                      [0,0,1,0],
+        #                      [0,0,0,0]]
         self.playscreen4x4s.move(logic.MOVE_TURN)
-        test_4x4s_one_turn = [[0,1,0,0],
+        test_4x4s_one_turn = [[0,0,1,1],
                               [0,1,1,0],
-                              [0,0,1,0],
+                              [0,0,0,0],
                               [0,0,0,0]]
+        self.assertEqual(self.playscreen4x4s.playmatrix, test_4x4s_one_turn, "one turn of 4x4s")
+
         self.playscreen4x4s.move(logic.MOVE_TURN)
+        test_4x4s_two_turns = [[0,1,0,0],
+                               [0,1,1,0],
+                               [0,0,1,0],
+                               [0,0,0,0]]
+        self.assertEqual(self.playscreen4x4s.playmatrix, test_4x4s_two_turns, "two turns of 4x4s")
 
 
     def test_zero_matrix(self):
