@@ -17,6 +17,7 @@ class Test_Moving_Tiles(unittest.TestCase):
         #self.playscreen4x4s.new_Block(self.S_BLOCK)
         self.playscreen10x10z = logic.Playscreen(10, 10, block = logic.Block(Z_BLOCK))
         #self.playscreen10x10z.new_Block(self.Z_BLOCK)
+        self.playscreen3x10z = logic.Playscreen(3, 10, block = logic.Block(Z_BLOCK))
 
     def test_setup(self):
         test_4x4s = [[0,1,0,0],
@@ -49,6 +50,12 @@ class Test_Moving_Tiles(unittest.TestCase):
                                [0,0,1,0],
                                [0,0,0,0]]
         self.assertEqual(self.playscreen4x4s.playmatrix, test_4x4s_two_turns, "two turns of 4x4s")
+        
+        self.playscreen3x10z.move(logic.MOVE_TURN)
+        ##
+        # insert assert here
+        ###
+        self.playscreen3x10z.move(logic.MOVE_TURN)
 
 
     def test_zero_matrix(self):

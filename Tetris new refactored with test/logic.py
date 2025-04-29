@@ -270,23 +270,35 @@ class Playscreen():
             self.active_block_pos[1] = 0
         except BlockTooLowError:
             pass
-#                self.active_block_2_background
-#                self.new_Block()
+#            self.active_block_2_background
+#            self.new_Block()
+        else:
         # input new block if no error found
-        self.insert_active_block()
-        if self._counting(self.playmatrix) < before:
-            self.erase_active_block()
-            # if before != after: block blocked, reverse movement
-            if direction == MOVE_DOWN:
-                self.active_block_pos[0] -= 1
-            elif direction == MOVE_LEFT:
-                self.active_block_pos[1] += 1
-            elif direction == MOVE_RIGHT:
-                self.active_block_pos[1] -= 1
-            elif direction == MOVE_TURN:
-                for _ in range(3):
-                    self._turn_active_block()
-        self.insert_active_block()
+            self.insert_active_block()
+            if self._counting(self.playmatrix) < before:
+                # if before != after: block blocked, reverse movement
+                # first reset to background
+                self.draw_background_blocks()
+                # then reverse the movement
+                if direction == MOVE_DOWN:
+                    self.active_block_pos[0] -= 1
+                    ####
+                    # remember, so next time the new block will come!!
+                    ####
+                elif direction == MOVE_LEFT:
+                    self.active_block_pos[1] += 1
+                elif direction == MOVE_RIGHT:
+                    self.active_block_pos[1] -= 1
+                elif direction == MOVE_TURN:
+                    for _ in range(3):
+                        self._turn_active_block()
+                # last insert the resetted active block
+                self.insert_active_block()
+
+    def draw_background_blocks(self):
+        for i, row in enumerate(self.background_blocks):
+            for j , el in enumerate(row):
+                self.playmatrix[i][j] = el
 
             
     def print_me(self):
