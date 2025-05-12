@@ -55,15 +55,15 @@ class Playscreen():
         self.active_block_pos = [0,0]
         self._add_Block(block = self.active_block)
         
-    def get_width(self) -> int:
+    def _get_width(self) -> int:
         '''return width of playmatrix'''
         return len(self.playmatrix[0])
         
-    def get_height(self) -> int:
+    def _get_height(self) -> int:
         '''return height of playmatrix'''
         return len(self.playmatrix)
 
-    def active_block_to_background(self):
+    def _active_block_to_background(self):
         '''
         when Block stops moving and
         becomes part of the Background
@@ -72,7 +72,7 @@ class Playscreen():
         ?? or in GUI ??
         '''
 
-    def new_Block(
+    def _new_Block(
             self,
             block = None,
             pos = None
@@ -107,7 +107,7 @@ class Playscreen():
         else lose the Game!!
         '''
         # copy active_block to background
-        self.active_block_to_background()
+        self._active_block_to_background()
         # active getting from the preview block
         # else new one
         if not self.preview_block:
@@ -122,7 +122,7 @@ class Playscreen():
 # DEBUGGING
 #          print_matrix(block.block)
 #          inserting active_block into playscreen
-          self.insert_active_block()
+          self._insert_active_block()
         else:
             #Exception and lose game
             pass
@@ -146,7 +146,7 @@ class Playscreen():
                     return False
         return True
 
-    def get_block_pos(self, block, abs = True):
+    def _get_block_pos(self, block, abs = True):
         '''DOESN'T WORK yet
         perhaps not needed
         '''
@@ -158,7 +158,7 @@ class Playscreen():
                 yield [_x, _y]
 
           
-    def insert_active_block(self):
+    def _insert_active_block(self, block = self.active_block):
         '''
         copy active block to playmatrix
         '''
@@ -168,18 +168,30 @@ class Playscreen():
 #                self.playmatrix[_x][_y] = block.block[y-_y][x-_x]
 # DEBUGGING
 #          print(f"erase block {block} at {x, y}")
-#          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))
-        bw = ablock.get_width()#
-        bh = ablock.get_height()
-        for i in range(bw):
-            for j in range(bh):
-#                print(i,j)
-                _x = x + i
-                _y = y + j
-                self.playmatrix[_x][_y] = ablock.block[j][i]
-#          print("alt:", self.playmatrix)
-                
-    def erase_active_block(self):
+#          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))            
+        try:
+            bw = ablock.get_width()#
+            bh = ablock.get_height()
+            for i in range(bw):
+                for j in range(bh):
+                    _x = x + i + moveIndex
+                    _y = y + j
+#                   # checking if playmatrix is free at the given block
+                    if ablock.block[j][i]:
+                        # checking if playmatrix not giving indexError
+                        test = self.playmatrix[_x][_y]
+        except IndexError:
+            raise BlockBlockedError
+        else:
+            for i in range(bw):
+                for j in range(bh):
+#                    print(i,j)
+                    _x = x + i + moveIndex
+                    _y = y + j
+                    self.playmatrix[_x][_y] = ablock.block[j][i]
+
+
+    def _erase_active_block(self):
         '''
         delete active block from playmatrix
         '''
@@ -217,7 +229,7 @@ class Playscreen():
         active Block falls a step,
         if it's not at the bottom
         '''
-        if self.active_block_pos[0] + self.active_block.get_height() >= self.get_height() - 1:
+        if self.active_block_pos[0] + self.active_block.get_height() >= self._get_height() - 1:
             raise BlockTooLowError
         #else: go down
         self.active_block_pos[0] += 1
@@ -235,7 +247,7 @@ class Playscreen():
         '''
         if not at the right border, go right
         '''
-        if self.active_block_pos[1] + self.active_block.get_width() + 1 >= self.get_width():
+        if self.active_block_pos[1] + self.active_block.get_width() > self._get_width():
             raise BlockTooRightError(f"right border is right there, so stop") #:\nself.active_block_pos[1] = {self.active_block_pos[1]}\nself.active_block.get_width() = {self.active_block.get_width()}\nself.get_width() = {self.get_width()}")
         self.active_block_pos[1] += 1
 
@@ -250,7 +262,7 @@ class Playscreen():
         # first counting,
         before = self._counting(self.playmatrix)
         # then deleting old block,
-        self.erase_active_block()
+        self._erase_active_block()
         # then move block (old -> new)
         try:
                 self.dummy = Block(block = self.active_block)
@@ -264,7 +276,7 @@ class Playscreen():
                     self._turn_active_block()
         except BlockTooRightError as e:
             #self.active_block_pos[1] = self.get_width()-self.active_block.get_width()
-            print("went too right", e)
+            pass
         except BlockTooLeftError as e:
             print("went too left", e)
             self.active_block_pos[1] = 0
@@ -272,9 +284,12 @@ class Playscreen():
             pass
 #            self.active_block_2_background
 #            self.new_Block()
-        else:
+        finally:
         # input new block if no error found
-            self.insert_active_block()
+            try:
+                self._insert_active_block()
+            except:
+
             if self._counting(self.playmatrix) < before:
                 # if before != after: block blocked, reverse movement
                 # first reset to background
@@ -293,7 +308,7 @@ class Playscreen():
                     for _ in range(3):
                         self._turn_active_block()
                 # last insert the resetted active block
-                self.insert_active_block()
+                self._insert_active_block()
 
     def draw_background_blocks(self):
         for i, row in enumerate(self.background_blocks):

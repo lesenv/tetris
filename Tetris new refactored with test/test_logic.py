@@ -91,6 +91,10 @@ class Test_Moving_Tiles(unittest.TestCase):
         self.playscreen3x10z.move(logic.MOVE_TURN)
         self.assertEqual(self.playscreen3x10z.playmatrix, test_3x10z_two_turns, "second turn of 3x10z")
 
+        self.playscreen3x10z.move(logic.MOVE_RIGHT)
+        self.playscreen3x10z.move(logic.MOVE_TURN)
+        self.assertEqual(self.playscreen3x10z.playmatrix, test_3x10z_one_turn, "turn of 3x10z moved to the right")
+
 
     def test_zero_matrix(self):
         self.assertEqual(logic.zero_matrix(2,2), [[0,0],[0,0]], "2-2 0-matrix didn't work")
@@ -122,7 +126,7 @@ class Test_Moving_Tiles(unittest.TestCase):
         # think of what is happening
         for _ in range(3):
             self.playscreen10x10z.move(logic.MOVE_DOWN)
-        self.playscreen10x10z.new_Block()
+        self.playscreen10x10z._new_Block()
         self.playscreen10x10z.move(logic.MOVE_DOWN)
         self.playscreen10x10z.move(logic.MOVE_DOWN)
         
@@ -160,19 +164,18 @@ class Test_Moving_Tiles(unittest.TestCase):
         test[2][1] = 1
         self.playscreen3x10z.move(logic.MOVE_RIGHT)
         self.assertEqual(self.playscreen3x10z.playmatrix, test, "didn't move right accordingly second time")
-        test = logic.zero_matrix(3,10)
-        test[0][2] = 1
-        test[1][1], test[1][2] = 1,1
-        test[2][1] = 1
-        self.playscreen3x10z.move(logic.MOVE_RIGHT)
-        self.assertEqual(self.playscreen3x10z.playmatrix, test, "didn't move right accordingly second time")
 
     def test_block_too_right_at_the_right_side(self):
-        #for _ in range(3):
-        #    self.playscreen10x10z.move(logic.MOVE_RIGHT)
+        for _ in range(13):
+            self.playscreen10x10z.move(logic.MOVE_RIGHT)
         right_screen = self.playscreen10x10z.playmatrix
         self.playscreen10x10z.move(logic.MOVE_RIGHT)
         self.assertEqual(self.playscreen10x10z.playmatrix, right_screen, "Block moved, although Block is at the right border")
+        for _ in range(3):
+            self.playscreen3x10z.move(logic.MOVE_RIGHT)
+        right_screen = self.playscreen3x10z.playmatrix
+        self.playscreen3x10z.move(logic.MOVE_RIGHT)
+        self.assertEqual(self.playscreen3x10z.playmatrix, right_screen, "didn't move right accordingly second time")
         
         
 if __name__ == "__main__":
