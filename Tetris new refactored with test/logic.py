@@ -158,37 +158,19 @@ class Playscreen():
                 yield [_x, _y]
 
           
-    def _insert_active_block(self, block = self.active_block):
+    def _insert_active_block(self):
         '''
         copy active block to playmatrix
         '''
         ablock = self.active_block
         x, y = self.active_block_pos
-#          for _x, _y in self.get_block_pos(block):
-#                self.playmatrix[_x][_y] = block.block[y-_y][x-_x]
-# DEBUGGING
-#          print(f"erase block {block} at {x, y}")
-#          self.playmatrix = zero_matrix(len(self.playmatrix[0]), len(self.playmatrix))            
-        try:
-            bw = ablock.get_width()#
-            bh = ablock.get_height()
-            for i in range(bw):
-                for j in range(bh):
-                    _x = x + i + moveIndex
-                    _y = y + j
-#                   # checking if playmatrix is free at the given block
-                    if ablock.block[j][i]:
-                        # checking if playmatrix not giving indexError
-                        test = self.playmatrix[_x][_y]
-        except IndexError:
-            raise BlockBlockedError
-        else:
-            for i in range(bw):
-                for j in range(bh):
-#                    print(i,j)
-                    _x = x + i + moveIndex
-                    _y = y + j
-                    self.playmatrix[_x][_y] = ablock.block[j][i]
+        bw = ablock.get_width()
+        bh = ablock.get_height()
+        for i in range(bw):
+            for j in range(bh):
+                _x = x + i
+                _y = y + j
+                self.playmatrix[_x][_y] = ablock.block[j][i]
 
 
     def _erase_active_block(self):
@@ -253,6 +235,14 @@ class Playscreen():
 
     def _turn_active_block(self):
         self.active_block.turn()
+
+    def _safe_active_block(self):
+        self.safe_block = Block(block = self.active_block.block)
+        self.safe_pos = self.active_block_pos
+
+    def _get_saved_block(self):
+        self.active_block = self.safe_block
+        self.active_block_pos = self.safe_pos
             
     def move(self, direction):
         '''
@@ -265,7 +255,7 @@ class Playscreen():
         self._erase_active_block()
         # then move block (old -> new)
         try:
-                self.dummy = Block(block = self.active_block)
+                self._safe_active_block()
                 if direction == MOVE_DOWN:
                     self._fall_down()
                 elif direction == MOVE_LEFT:
@@ -285,10 +275,13 @@ class Playscreen():
 #            self.active_block_2_background
 #            self.new_Block()
         finally:
-        # input new block if no error found
             try:
+                # input new block if no error found
                 self._insert_active_block()
-            except:
+            except IndexError:
+                # if another Error saving  don't move, get the old active_block back
+                self._get_saved_block()
+                self._insert_active_block()
 
             if self._counting(self.playmatrix) < before:
                 # if before != after: block blocked, reverse movement
