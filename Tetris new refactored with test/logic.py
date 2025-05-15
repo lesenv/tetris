@@ -280,27 +280,14 @@ class Playscreen():
                 self._insert_active_block()
             except IndexError:
                 # if another Error saving  don't move, get the old active_block back
-                self._get_saved_block()
-                self._insert_active_block()
+                before = 100000
 
             if self._counting(self.playmatrix) < before:
                 # if before != after: block blocked, reverse movement
                 # first reset to background
                 self.draw_background_blocks()
                 # then reverse the movement
-                if direction == MOVE_DOWN:
-                    self.active_block_pos[0] -= 1
-                    ####
-                    # remember, so next time the new block will come!!
-                    ####
-                elif direction == MOVE_LEFT:
-                    self.active_block_pos[1] += 1
-                elif direction == MOVE_RIGHT:
-                    self.active_block_pos[1] -= 1
-                elif direction == MOVE_TURN:
-                    for _ in range(3):
-                        self._turn_active_block()
-                # last insert the resetted active block
+                self._get_saved_block()
                 self._insert_active_block()
 
     def draw_background_blocks(self):

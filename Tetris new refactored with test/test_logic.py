@@ -93,7 +93,17 @@ class Test_Moving_Tiles(unittest.TestCase):
 
         self.playscreen3x10z.move(logic.MOVE_RIGHT)
         self.playscreen3x10z.move(logic.MOVE_TURN)
-        self.assertEqual(self.playscreen3x10z.playmatrix, test_3x10z_one_turn, "turn of 3x10z moved to the right")
+        test_3x10z_right_turn = [[0,0,1],
+                                 [0,1,1],
+                                 [0,1,0],
+                                 [0,0,0],
+                                 [0,0,0],
+                                 [0,0,0],
+                                 [0,0,0],
+                                 [0,0,0],
+                                 [0,0,0],
+                                 [0,0,0]]
+        self.assertEqual(self.playscreen3x10z.playmatrix, test_3x10z_right_turn, "turn of 3x10z moved to the right")
 
 
     def test_zero_matrix(self):
