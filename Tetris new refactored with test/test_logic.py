@@ -143,9 +143,10 @@ class Test_Moving_Tiles(unittest.TestCase):
     def test_fall_stopping_at_the_bottom(self):
         self.playscreen4x4s.move(logic.MOVE_DOWN)
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        bottom_screen = self.playscreen4x4s.playmatrix
+        bottom_screen = self.playscreen4x4s.playmatrix[-2:]
         self.playscreen4x4s.move(logic.MOVE_DOWN)
-        self.assertEqual(self.playscreen4x4s.playmatrix, bottom_screen, "4x4s: Block moved, although Block is at the bottom")
+        print(bottom_screen)
+        self.assertEqual(self.playscreen4x4s.playmatrix[-2:], bottom_screen, "4x4s: Block moved, although Block is at the bottom")
 
         for _ in range(10):
             self.playscreen3x10z.move(logic.MOVE_DOWN)
