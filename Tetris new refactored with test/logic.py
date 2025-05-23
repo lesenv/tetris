@@ -20,7 +20,8 @@ def print_matrix(matrix : list[list[int]]) -> None:
     for DEBUGGING purposes
     '''
     for line in matrix:
-        print(line)
+        new = ["X" if i else "." for i in line]
+        print(new)
 
 def zero_matrix(width : int, height : int) -> list[list[int]]:
     '''
@@ -50,10 +51,12 @@ class Playscreen():
         # active Block given?
         if not block:
             block = Block()
-        self.preview_block = block
-        self.active_block = None # activated in _add_Block by copying from preview
-        self.active_block_pos = [0,0]
-        self._add_Block(block = self.active_block)
+            block_preview = Block()
+        else:
+            block_preview = block
+        self.preview_block = block_preview
+        self.active_block = block
+        self._new_Block(block = self.active_block)
         
     def _get_width(self) -> int:
         '''return width of playmatrix'''
@@ -71,6 +74,13 @@ class Playscreen():
         ?? storing color ??
         ?? or in GUI ??
         '''
+        self._send_active_block_2_background()
+        self._new_Block()
+        
+    def _send_active_block_2_background(self):
+        x, y = self.active_block_pos
+        for i, j, el in self.active_block:
+            self.background_blocks[x+i][y+j] = el
 
     def _new_Block(
             self,
@@ -81,13 +91,15 @@ class Playscreen():
         create new Block:
         - deactivate the active Block
         - activate the preview block
-    !!!!!!!                        !!!!!!!!
-    !!! Not done in add_Block() anymore !!!
-    !!!      pos, too!                  !!!
-    !!!!!!!                        !!!!!!!!
         - create a new one for the preview
         '''
-        #self.active_Block to background, then None
+        # active getting from the preview block
+        if not self.preview_block:
+            raise BlockingIOError("no preview_block, too bad. in _new_Block()")
+        self.active_block = self.preview_block
+        if not block:
+            # if not given, _add_Block needs a Block()
+            block = Block()
         self._add_Block(block, pos)
 
     def _add_Block(
@@ -95,33 +107,17 @@ class Playscreen():
             block = None,
             pos = None
             ) -> None:
-        '''
-        - active_block to background
-        - active_block getting from
-           preview_block
-        - preview_block new Block(),
-           if not given block
-        
+        '''        
         Check if there is no Block blocking
         the new one,
         else lose the Game!!
         '''
-        # copy active_block to background
-        self._active_block_to_background()
-        # active getting from the preview block
-        # else new one
-        if not self.preview_block:
-            raise BlockingIOError("no preview_block, too bad. in _add_Block()")
-        self.active_block = self.preview_block
         # if pos is not given,
-        # take the top-middle    
+        # take the top-middle
         if not pos:
             pos =  [0, int((len(self.playmatrix[0])-self.active_block.get_width()+1)/2)]
         self.active_block_pos = pos
         if self._is_block_free(self.active_block, pos):
-# DEBUGGING
-#          print_matrix(block.block)
-#          inserting active_block into playscreen
           self._insert_active_block()
         else:
             #Exception and lose game
@@ -146,7 +142,9 @@ class Playscreen():
                     return False
         return True
 
-    def _get_block_pos(self, block, abs = True):
+
+### needed?? ###
+    def _get_block_pos(self, block):
         '''DOESN'T WORK yet
         perhaps not needed
         '''
@@ -229,8 +227,10 @@ class Playscreen():
         '''
         if not at the right border, go right
         '''
-        if self.active_block_pos[1] + self.active_block.get_width() > self._get_width():
-            raise BlockTooRightError(f"right border is right there, so stop") #:\nself.active_block_pos[1] = {self.active_block_pos[1]}\nself.active_block.get_width() = {self.active_block.get_width()}\nself.get_width() = {self.get_width()}")
+        # Block with height because
+        # Block is turned
+        if self.active_block_pos[1] + self.active_block.get_height() + 1 > self._get_width():
+            raise BlockTooRightError(f"right border is right there, so stop")#:\nself.active_block_pos[1] = {self.active_block_pos[1]}\nself.active_block.get_width() = {self.active_block.get_width()}\nself.get_width() = {self.get_width()}")
         self.active_block_pos[1] += 1
 
     def _turn_active_block(self):
@@ -271,9 +271,7 @@ class Playscreen():
             print("went too left", e)
             self.active_block_pos[1] = 0
         except BlockTooLowError:
-            pass
-#            self.active_block_2_background
-#            self.new_Block()
+             self._active_block_to_background()
         finally:
             try:
                 # input new block if no error found
@@ -306,14 +304,9 @@ class Playscreen():
 
 if __name__ == "__main__":
     print("LOS")
-    tetris = Playscreen(22,13)
-    tetris.print_me()
-    print("creating a block")
     block1 = Block()
-    tetris.preview_block = block1
-    print("adding a block:")
-    print_matrix(block1.block)
-    tetris._add_Block(block1)
+    tetris = Playscreen(12, 6, block1)
+    tetris.print_me()
     print("printing")
     tetris.print_me()
     print("turn")
@@ -325,13 +318,19 @@ if __name__ == "__main__":
     tetris.print_me()
     print("go right to the most")
     for i in range(10):
+        print(i)
+        tetris.print_me()
         tetris.move(MOVE_RIGHT)
     tetris.print_me()
     print("go left to the other side")
-    for i in range(10):
+    for _ in range(10):
         tetris.move(MOVE_LEFT)
     tetris.print_me()
     print("turn")
     tetris.move(MOVE_TURN)
+    tetris.print_me()
+    print("Fall thrice")
+    for _ in range(5):
+        tetris.move(MOVE_DOWN)
     tetris.print_me()
     
