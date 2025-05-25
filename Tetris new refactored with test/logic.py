@@ -299,9 +299,16 @@ class Playscreen():
         print playmatrix nicely
         to be called from outside
         '''
-        print_matrix(self.playmatrix)
+        print_matrix(self._combined_matrix())
         
-
+    def _combined_matrix(self):
+        combined = self.playmatrix
+        for i, line in enumerate(self.playmatrix):
+            for j in line:
+                if self.background_blocks[i][j]:
+                    combined[i][j] = 1
+        return combined
+                    
 if __name__ == "__main__":
     print("LOS")
     block1 = Block()
@@ -330,7 +337,7 @@ if __name__ == "__main__":
     tetris.move(MOVE_TURN)
     tetris.print_me()
     print("Fall thrice")
-    for _ in range(5):
+    for i in range(5):
         tetris.move(MOVE_DOWN)
-    tetris.print_me()
-    
+        print(i)
+        tetris.print_me()
