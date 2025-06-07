@@ -1,5 +1,5 @@
 '''
-Exceptions
+Exceptions used in logic.py
 '''
 class BlockMovingError(IndexError):
     '''

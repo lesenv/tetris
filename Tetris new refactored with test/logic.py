@@ -14,6 +14,7 @@ MOVE_LEFT = "left"
 MOVE_RIGHT = "right"
 MOVE_TURN = "turn"
 
+
 def print_matrix(matrix : list[list[int]]) -> None:
     '''
     printing nicely a matrix
@@ -30,7 +31,6 @@ def zero_matrix(width : int, height : int) -> list[list[int]]:
     '''
     return [[0 for i in range(width)] for j in range(height)]
     
-
 
 class Playscreen():
     '''
@@ -142,7 +142,6 @@ class Playscreen():
                     return False
         return True
 
-
 ### needed?? ###
     def _get_block_pos(self, block):
         '''DOESN'T WORK yet
@@ -155,7 +154,6 @@ class Playscreen():
                 _y = y + j
                 yield [_x, _y]
 
-          
     def _insert_active_block(self):
         '''
         copy active block to playmatrix
@@ -169,7 +167,6 @@ class Playscreen():
                 _x = x + i
                 _y = y + j
                 self.playmatrix[_x][_y] = ablock.block[j][i]
-
 
     def _erase_active_block(self):
         '''
@@ -293,7 +290,6 @@ class Playscreen():
             for j , el in enumerate(row):
                 self.playmatrix[i][j] = el
 
-            
     def print_me(self):
         '''
         print playmatrix nicely
@@ -308,7 +304,8 @@ class Playscreen():
                 if self.background_blocks[i][j]:
                     combined[i][j] = 1
         return combined
-                    
+                   
+
 if __name__ == "__main__":
     print("LOS")
     block1 = Block()

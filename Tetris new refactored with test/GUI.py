@@ -1,6 +1,7 @@
 import pygame
 import logic
 
+
 class BlockSprite(pygame.sprite.Sprite):
     def __init__(self, color, dim):
         super().__init__()
@@ -21,6 +22,7 @@ class BlockSprite(pygame.sprite.Sprite):
          self.rect.topleft = (x, y)
 # DEBUGGING
 #         print(f"new PosAbs {self.rect.topleft}")
+
 
 class Game():
     def __init__(

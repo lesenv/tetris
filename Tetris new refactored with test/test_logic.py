@@ -5,10 +5,12 @@ importing logic imports Block automatically
 import unittest
 import logic
 
+
 S_BLOCK = [[1,1,0],
            [0,1,1]]
 Z_BLOCK = [[0,1,1],
            [1,1,0]]
+
 
 class Test_Moving_Tiles(unittest.TestCase):
     def setUp(self):
@@ -105,7 +107,6 @@ class Test_Moving_Tiles(unittest.TestCase):
                                  [0,0,0]]
         self.assertEqual(self.playscreen3x10z.playmatrix, test_3x10z_right_turn, "turn of 3x10z moved to the right")
 
-
     def test_zero_matrix(self):
         self.assertEqual(logic.zero_matrix(2,2), [[0,0],[0,0]], "2-2 0-matrix didn't work")
         self.assertEqual(logic.zero_matrix(3,4), [[0,0,0],[0,0,0],[0,0,0],[0,0,0]], "3-4 0_matrix didn't work")
@@ -168,7 +169,6 @@ class Test_Moving_Tiles(unittest.TestCase):
         self.playscreen10x10z.move(logic.MOVE_RIGHT)
         self.assertEqual(self.playscreen10x10z.playmatrix, test, "didn't move right accordingly second time")
 
-        
         test = logic.zero_matrix(3,10)
         test[0][2] = 1
         test[1][1], test[1][2] = 1,1

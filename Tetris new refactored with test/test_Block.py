@@ -1,6 +1,7 @@
 import unittest
 from Block import Block
 
+
 class Test_Blocks(unittest.TestCase):
     def setUp(self):
         # Blocks
@@ -68,5 +69,6 @@ class Test_Blocks(unittest.TestCase):
         self.tower_block.turn()
         self.assertEqual(self.tower_block.block, [[1,1, 1,1]], "2nd turning tower not working")
         
+
 if __name__ == "__main__":
     unittest.main(verbosity = 2)
